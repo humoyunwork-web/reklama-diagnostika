@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maxsus video &mdash; Reklama samaradorligini oshirish</title>
+<meta name="description" content="5 daqiqalik maxsus video: reklama samaradorligini oshirish va voronkadagi kamchiliklarni to'g'rilash bo'yicha.">
+<style>
+  :root{
+    --text:#f5f2ff;
+    --text-secondary:#c7bfe6;
+    --text-muted:#8d84ac;
+    --glass-bg:rgba(255,255,255,.055);
+    --glass-border:rgba(255,255,255,.13);
+    --radius:20px;
+    --max:840px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--text);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    background-color:#0a0818;
+    min-height:100vh;
+    background-image:
+      radial-gradient(55% 45% at 12% 8%, rgba(139,124,246,.30), transparent 62%),
+      radial-gradient(45% 40% at 92% 6%, rgba(255,143,102,.16), transparent 60%),
+      radial-gradient(55% 50% at 10% 92%, rgba(79,110,255,.14), transparent 62%);
+    background-repeat:no-repeat;
+    padding:56px 20px 60px;
+  }
+  a{color:inherit;}
+  .wrap{max-width:var(--max);margin:0 auto;}
+  .eyebrow{
+    display:inline-block;font-size:13px;font-weight:600;color:#e9dfff;
+    letter-spacing:.02em;background:var(--glass-bg);border:1px solid var(--glass-border);
+    padding:7px 16px;border-radius:100px;margin-bottom:22px;
+  }
+  h1{font-size:clamp(26px,4.4vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.15;text-wrap:balance;margin-bottom:14px;}
+  p.lead{max-width:560px;color:var(--text-secondary);font-size:16px;margin-bottom:34px;}
+  .video-wrap{
+    position:relative;width:100%;padding-top:56.25%;
+    border-radius:var(--radius);overflow:hidden;
+    background:#000;border:1px solid var(--glass-border);
+    box-shadow:0 30px 80px rgba(0,0,0,.5);
+  }
+  .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+  .back-link{display:inline-block;margin-top:34px;color:var(--text-muted);font-size:14px;text-decoration:underline;text-underline-offset:3px;}
+  .back-link:hover{color:var(--text);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="eyebrow">Maxsus video &middot; 5 daqiqa</span>
+  <h1>Reklama samaradorligini oshirish va voronkadagi kamchiliklarni to'g'rilash</h1>
+  <p class="lead">Diagnostikada topilgan muammolarni qanday tuzatish mumkinligi haqida qisqacha video ko'rsatma.</p>
+  <div class="video-wrap">
+    <iframe src="https://www.youtube-nocookie.com/embed/4rF2qfdhMOg?rel=0&amp;modestbranding=1" title="Reklama samaradorligini oshirish" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <a href="index.html" class="back-link">&larr; Diagnostikaga qaytish</a>
+</div>
+</body>
+</html>
