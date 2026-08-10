@@ -87,6 +87,7 @@
     margin-top:26px;display:flex;align-items:baseline;gap:10px;
     border-bottom:2px solid var(--glass-border-strong);padding-bottom:12px;
   }
+  .num-input .prefix{font-size:clamp(24px,5vw,32px);font-weight:700;color:var(--text-muted);}
   .num-input input{
     flex:1;min-width:0;background:none;border:none;outline:none;
     font-family:inherit;font-size:clamp(28px,6vw,38px);font-weight:700;color:var(--text);
@@ -95,6 +96,16 @@
   .num-input input::placeholder{color:var(--text-muted);font-weight:600;opacity:.5;}
   .num-input .unit{font-size:15px;color:var(--text-muted);font-weight:600;white-space:nowrap;}
   .num-input:focus-within{border-color:var(--coral);}
+
+  .text-area-wrap{margin-top:26px;}
+  .text-area-wrap textarea{
+    width:100%;min-height:96px;resize:none;
+    background:var(--glass-bg);border:1px solid var(--glass-border-strong);border-radius:14px;
+    padding:16px;font-family:inherit;font-size:16.5px;color:var(--text);outline:none;
+    line-height:1.5;
+  }
+  .text-area-wrap textarea::placeholder{color:var(--text-muted);}
+  .text-area-wrap textarea:focus{border-color:var(--coral);}
 
   .slider-wrap{margin-top:30px;}
   .slider-val{font-size:clamp(32px,7vw,44px);font-weight:800;color:var(--coral);letter-spacing:-.02em;}
@@ -199,9 +210,9 @@
 <div class="wrap">
 
   <div class="intro">
-    <span class="eyebrow">Bepul &middot; 60 soniya &middot; 5 ta savol</span>
+    <span class="eyebrow">Bepul &middot; 60 soniya &middot; 6 ta savol</span>
     <h1>Targetga pul ketyapti,<br><span class="thin">lekin sotuv yo'q. Nega?</span></h1>
-    <p class="lead">5 ta savolga javob bering &mdash; voronangizning aynan qaysi bosqichida pul yo'qolayotganini ko'rsatib beramiz.</p>
+    <p class="lead">6 ta savolga javob bering &mdash; voronangizning aynan qaysi bosqichida pul yo'qolayotganini ko'rsatib beramiz.</p>
   </div>
 
   <!-- QUIZ -->
@@ -214,8 +225,9 @@
         <h2>Oyiga targetga (reklamaga) qancha pul sarflaysiz?</h2>
         <p class="hint">Instagram/Facebook reklama byudjeti, oylik.</p>
         <div class="num-input">
-          <input type="text" inputmode="numeric" id="budget" placeholder="5 000 000" required>
-          <span class="unit">so'm / oy</span>
+          <span class="prefix">$</span>
+          <input type="text" inputmode="numeric" id="budget" placeholder="500" required>
+          <span class="unit">/ oy</span>
         </div>
         <div class="step-actions">
           <button type="button" class="btn btn-primary btn-block" data-next>Davom etish</button>
@@ -238,6 +250,19 @@
 
       <div class="step" data-step="3">
         <div class="tag">3-savol</div>
+        <h2>Qaysi sohada faoliyat yuritasiz?</h2>
+        <p class="hint">Nima mahsulot yoki xizmat sotasiz? Masalan: onlayn kurs, go'zallik saloni, kiyim do'koni, stomatologiya.</p>
+        <div class="text-area-wrap">
+          <textarea id="niche" placeholder="Masalan: onlayn ingliz tili kursi" required></textarea>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn btn-ghost" data-back>Orqaga</button>
+          <button type="button" class="btn btn-primary" data-next>Davom etish</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="4">
+        <div class="tag">4-savol</div>
         <h2>Kelgan lidlarning necha foizi sifatli?</h2>
         <p class="hint">Ya'ni haqiqiy qiziqqan, to'g'ri auditoriyadan &mdash; "shunchaki narx so'ragan" emas.</p>
         <div class="slider-wrap">
@@ -251,8 +276,8 @@
         </div>
       </div>
 
-      <div class="step" data-step="4">
-        <div class="tag">4-savol</div>
+      <div class="step" data-step="5">
+        <div class="tag">5-savol</div>
         <h2>Sifatli lidlardan necha foizi haqiqiy xaridorga aylanadi?</h2>
         <p class="hint">Sotuv (savdo) konversiyasi &mdash; siz bilan gaplashgandan keyin pul to'lab xarid qiladiganlar.</p>
         <div class="slider-wrap">
@@ -266,13 +291,13 @@
         </div>
       </div>
 
-      <div class="step" data-step="5">
-        <div class="tag">5-savol</div>
-        <h2>Bitta mijozdan o'rtacha qancha daromad olasiz?</h2>
-        <p class="hint">O'rtacha chek &mdash; bitta xariddan tushadigan sof summa.</p>
+      <div class="step" data-step="6">
+        <div class="tag">6-savol</div>
+        <h2>Mahsulotingiz yoki xizmatingizning narxi qancha?</h2>
+        <p class="hint">O'rtacha chek &mdash; bitta mijoz sizga to'laydigan summa.</p>
         <div class="num-input">
-          <input type="text" inputmode="numeric" id="avgCheck" placeholder="300 000" required>
-          <span class="unit">so'm</span>
+          <span class="prefix">$</span>
+          <input type="text" inputmode="numeric" id="avgCheck" placeholder="30" required>
         </div>
         <div class="step-actions">
           <button type="button" class="btn btn-ghost" data-back>Orqaga</button>
@@ -330,7 +355,7 @@
       <div class="metric-card glass">
         <div class="m-label">Oylik daromad</div>
         <div class="m-val" id="mRevenue">&mdash;</div>
-        <div class="m-sub">sotuvlar &times; o'rtacha chek</div>
+        <div class="m-sub">sotuvlar &times; mahsulot narxi</div>
       </div>
       <div class="metric-card glass">
         <div class="m-label">Sof foyda / zarar</div>
@@ -361,7 +386,7 @@
 
 <script>
 (function(){
-  var TOTAL_STEPS = 5;
+  var TOTAL_STEPS = 6;
   var currentStep = 1;
   var progressEl = document.getElementById('progress');
   for (var i=0;i<TOTAL_STEPS;i++){
@@ -379,7 +404,7 @@
   function formatMoney(raw){
     var digits = raw.replace(/\D/g,'');
     if (!digits) return '';
-    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   function rawNumber(str){
     return parseInt(String(str).replace(/\D/g,''),10) || 0;
@@ -406,7 +431,8 @@
   function stepValid(n){
     if (n===1) return rawNumber(document.getElementById('budget').value) > 0;
     if (n===2) return rawNumber(document.getElementById('leads').value) > 0;
-    if (n===5) return rawNumber(document.getElementById('avgCheck').value) > 0;
+    if (n===3) return document.getElementById('niche').value.trim().length > 0;
+    if (n===6) return rawNumber(document.getElementById('avgCheck').value) > 0;
     return true;
   }
 
@@ -421,8 +447,8 @@
   document.querySelectorAll('[data-next]').forEach(function(btn){
     btn.addEventListener('click', function(){
       if (!stepValid(currentStep)){
-        var input = document.querySelector('.step[data-step="'+currentStep+'"] input');
-        if (input){ input.focus(); input.style.borderColor = 'var(--bad)'; setTimeout(function(){input.style.borderColor='';},1200); }
+        var field = document.querySelector('.step[data-step="'+currentStep+'"] input, .step[data-step="'+currentStep+'"] textarea');
+        if (field){ field.focus(); field.style.borderColor = 'var(--bad)'; setTimeout(function(){field.style.borderColor='';},1200); }
         return;
       }
       if (currentStep < TOTAL_STEPS) goToStep(currentStep+1);
@@ -435,10 +461,14 @@
   });
 
   function fmt(n){
-    return Math.round(n).toLocaleString('fr-FR').replace(/ /g,' ') + " so'm";
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+  function fmtSigned(n){
+    var r = Math.round(n);
+    return (r<0?'-':'+') + '$' + Math.abs(r).toLocaleString('en-US');
   }
   function fmtInt(n){
-    return Math.round(n).toLocaleString('fr-FR').replace(/ /g,' ');
+    return Math.round(n).toLocaleString('en-US');
   }
 
   function setPill(el, level, label){
@@ -446,8 +476,30 @@
     el.innerHTML = '<i></i>' + label;
   }
 
+  var SHEET_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSebBKFWeQmz3dASxqacMGWIztfTHFfaGkER0_9IehJUxDET7g/formResponse';
+  var SHEET_FIELDS = {
+    niche: 'entry.1746025051',
+    budget: 'entry.1094338327',
+    leads: 'entry.2147427610',
+    quality: 'entry.978320469',
+    conversion: 'entry.1325493126',
+    avgCheck: 'entry.1196195223'
+  };
+  function submitToSheet(data){
+    try{
+      var body = new URLSearchParams();
+      body.append(SHEET_FIELDS.niche, data.niche);
+      body.append(SHEET_FIELDS.budget, data.budget);
+      body.append(SHEET_FIELDS.leads, data.leads);
+      body.append(SHEET_FIELDS.quality, data.quality);
+      body.append(SHEET_FIELDS.conversion, data.conversion);
+      body.append(SHEET_FIELDS.avgCheck, data.avgCheck);
+      fetch(SHEET_URL, { method:'POST', mode:'no-cors', body: body }).catch(function(){});
+    }catch(e){}
+  }
+
   document.getElementById('submitBtn').addEventListener('click', function(){
-    if (!stepValid(5)){
+    if (!stepValid(6)){
       var input = document.getElementById('avgCheck');
       input.focus(); input.style.borderColor = 'var(--bad)';
       setTimeout(function(){input.style.borderColor='';},1200);
@@ -456,9 +508,12 @@
 
     var budget = rawNumber(document.getElementById('budget').value);
     var leads = rawNumber(document.getElementById('leads').value);
+    var niche = document.getElementById('niche').value.trim();
     var quality = parseInt(qualitySlider.value,10);
     var conversion = parseInt(convSlider.value,10);
     var avgCheck = rawNumber(document.getElementById('avgCheck').value);
+
+    submitToSheet({ niche: niche, budget: budget, leads: leads, quality: quality, conversion: conversion, avgCheck: avgCheck });
 
     var cpl = budget / leads;
     var qualityLeads = leads * (quality/100);
@@ -481,7 +536,7 @@
     document.getElementById('mCpl').textContent = fmt(cpl);
     document.getElementById('mCac').textContent = cac ? fmt(cac) : "hisoblab bo'lmadi";
     document.getElementById('mRevenue').textContent = fmt(revenue);
-    document.getElementById('mProfit').textContent = (profit>=0?'+':'') + fmt(profit).replace("so'm","").trim() + " so'm";
+    document.getElementById('mProfit').textContent = fmtSigned(profit);
     document.getElementById('mProfit').style.color = profit >= 0 ? 'var(--good)' : 'var(--bad)';
 
     var cplStatus, qualityStatus, convStatus, profitStatus;
@@ -503,7 +558,7 @@
     else { profitStatus = {sev:0, level:'good', label:"Sog'lom"}; }
 
     setPill(document.getElementById('pillCpl'), cplStatus.level, cplStatus.label);
-    setPill(document.getElementById('pillCac'), profitStatus.level, profitStatus.label === 'Zarar' ? 'Zarar' : (cac && cac > avgCheck ? "Chekdan qimmat" : "Chekdan arzon"));
+    setPill(document.getElementById('pillCac'), profitStatus.level, profitStatus.label === 'Zarar' ? 'Zarar' : (cac && cac > avgCheck ? "Narxdan qimmat" : "Narxdan arzon"));
     setPill(document.getElementById('pillProfit'), profitStatus.level, profitStatus.label);
 
     var candidates = [
@@ -524,7 +579,7 @@
     if (primary.status.sev === 0){
       diagTag.textContent = "Umumiy holat";
       headline.textContent = "Voronangiz nisbatan sog'lom";
-      diagTextHtml = "Barcha bosqichlar (lid narxi, sifat, konversiya) qoniqarli darajada. Oylik sof natijangiz <strong>" + (profit>=0? '+' : '') + fmt(profit) + "</strong>. Endi asosiy vazifa &mdash; shu ko'rsatkichlarni saqlab, byudjetni ehtiyotkorlik bilan oshirib borish.";
+      diagTextHtml = "Barcha bosqichlar (lid narxi, sifat, konversiya) qoniqarli darajada. Oylik sof natijangiz <strong>" + fmtSigned(profit) + "</strong>. Endi asosiy vazifa &mdash; shu ko'rsatkichlarni saqlab, byudjetni ehtiyotkorlik bilan oshirib borish.";
     } else if (primary.key === 'quality'){
       diagTag.textContent = "Asosiy muammo: lid sifati";
       headline.textContent = "Pul sifatsiz lidlarga ketyapti";
@@ -536,7 +591,7 @@
     } else {
       diagTag.textContent = "Asosiy muammo: lid narxi";
       headline.textContent = "Lid narxi mahsulot narxiga nisbatan qimmat";
-      diagTextHtml = "Bitta lid <strong>" + fmt(cpl) + "</strong> ga tushyapti &mdash; bu o'rtacha chekingizning " + Math.round(cplRatio) + "% i. Sifat va konversiya normal bo'lsa ham, shu qimmat trafik butun voronani og'irlashtiradi.";
+      diagTextHtml = "Bitta lid <strong>" + fmt(cpl) + "</strong> ga tushyapti &mdash; bu mahsulot narxingizning " + Math.round(cplRatio) + "% i. Sifat va konversiya normal bo'lsa ham, shu qimmat trafik butun voronani og'irlashtiradi.";
     }
     diagText.innerHTML = diagTextHtml;
 
@@ -582,7 +637,7 @@
     }
     if (profitStatus.level === 'bad' && qualityStatus.sev===0 && convStatus.sev===0 && cplStatus.sev===0){
       addGroup("Umumiy iqtisodiyot uchun", [
-        "Mijoz narxi (CAC) o'rtacha chekdan yuqori — narxlash, upsell yoki qo'shimcha xizmatlar bilan o'rtacha chekni oshiring.",
+        "Mijoz narxi (CAC) mahsulot narxidan yuqori — narxlash, upsell yoki qo'shimcha xizmatlar bilan o'rtacha chekni oshiring.",
         "Xarajat va daromadni haftalik hisoblab boring, faqat lid soniga emas, real sotuvga qarab qaror qabul qiling."
       ]);
     }
