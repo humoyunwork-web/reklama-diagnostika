@@ -189,11 +189,25 @@
   .reco-group li{font-size:14.5px;color:var(--text-secondary);line-height:1.5;padding-left:20px;position:relative;}
   .reco-group li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--coral);}
 
-  .video-cta{padding:34px 32px;text-align:center;margin-bottom:24px;}
-  .video-cta .eyebrow{margin-bottom:16px;}
-  .video-cta h3{font-size:20px;font-weight:800;letter-spacing:-.015em;margin-bottom:10px;text-wrap:balance;}
-  .video-cta p{color:var(--text-secondary);font-size:14.5px;line-height:1.6;max-width:460px;margin:0 auto 22px;}
-  .video-cta .btn{display:inline-flex;}
+  .video-cta{
+    padding:38px 32px;text-align:center;margin-bottom:24px;
+    border:1.5px solid var(--coral-border);
+    background:linear-gradient(160deg, var(--coral-soft), var(--glass-bg) 65%);
+    box-shadow:0 20px 60px -24px rgba(255,143,102,.45);
+    position:relative;
+  }
+  .video-cta .eyebrow{
+    margin-bottom:16px;background:var(--coral-soft);border-color:var(--coral-border);color:var(--coral);
+  }
+  .video-cta h3{font-size:22px;font-weight:800;letter-spacing:-.015em;margin-bottom:10px;text-wrap:balance;}
+  .video-cta p{color:var(--text-secondary);font-size:14.5px;line-height:1.6;max-width:460px;margin:0 auto 26px;}
+  .video-cta .btn{display:inline-flex;font-size:16.5px;padding:17px 34px;animation:pulseGlow 2.4s ease-in-out infinite;}
+  .video-cta .btn:hover{animation-play-state:paused;}
+  @keyframes pulseGlow{
+    0%,100%{box-shadow:0 0 0 0 rgba(255,157,118,.55);}
+    50%{box-shadow:0 0 0 14px rgba(255,157,118,0);}
+  }
+  @media (prefers-reduced-motion:reduce){.video-cta .btn{animation:none;}}
 
   .result-actions{text-align:center;padding:10px 0 40px;}
   .result-actions button{background:none;border:none;color:var(--text-muted);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
@@ -382,10 +396,10 @@
     </div>
 
     <div class="video-cta glass">
-      <span class="eyebrow">Bonus</span>
+      <span class="eyebrow">Bonus &middot; 5 daqiqa</span>
       <h3>Sizga maxsus video tayyorladim</h3>
       <p>Menda siz uchun reklama samaradorligini oshirish va voronkadagi kamchiliklarni to'g'rilash bo'yicha 5 daqiqalik maxsus video bor, videoni ko'rish uchun pastdagi tugmani bosing.</p>
-      <a href="video.html" target="_blank" rel="noopener" class="btn btn-primary">Videoni ko'rish</a>
+      <a href="video.html" target="_blank" rel="noopener" class="btn btn-primary">&#9654; Videoni ko'rish</a>
     </div>
 
     <div class="result-actions">
