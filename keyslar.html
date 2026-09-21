@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bepul diagnostika &mdash; Humoyun Olimov</title>
+<meta name="description" content="Meta Ads targeting bo'yicha real keyslar va natijalar. Voronkangizni bepul tahlil qilish uchun ro'yxatdan o'ting.">
+<style>
+  :root{
+    --text:#f5f2ff;
+    --text-secondary:#c7bfe6;
+    --text-muted:#8d84ac;
+    --coral:#ff9d76;
+    --coral-soft:rgba(255,143,102,.15);
+    --coral-border:rgba(255,143,102,.32);
+    --cta-bg:#f5f2ff;
+    --cta-text:#1c1440;
+    --glass-bg:rgba(255,255,255,.055);
+    --glass-bg-strong:rgba(255,255,255,.09);
+    --glass-border:rgba(255,255,255,.13);
+    --glass-border-strong:rgba(255,255,255,.22);
+    --bad:#ff8f8f;
+    --good:#7ee0a8;
+    --radius:20px;
+    --max:900px;
+    --ease:cubic-bezier(.25,.1,.25,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased;
+    background-color:#0a0818;min-height:100vh;
+    background-image:
+      radial-gradient(55% 45% at 12% 6%, rgba(139,124,246,.30), transparent 62%),
+      radial-gradient(45% 40% at 92% 4%, rgba(255,143,102,.16), transparent 60%),
+      radial-gradient(55% 50% at 10% 70%, rgba(79,110,255,.14), transparent 62%),
+      radial-gradient(50% 45% at 95% 96%, rgba(255,143,102,.12), transparent 60%);
+    background-repeat:no-repeat;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px;}
+  .glass{
+    background:var(--glass-bg);border:1px solid var(--glass-border);
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border-radius:var(--radius);
+  }
+  .eyebrow{
+    display:inline-block;font-size:13px;font-weight:600;color:#e9dfff;
+    letter-spacing:.02em;background:var(--glass-bg);border:1px solid var(--glass-border);
+    padding:7px 16px;border-radius:100px;margin-bottom:22px;
+  }
+
+  .hero{padding:60px 0 50px;text-align:center;}
+  h1{font-size:clamp(29px,5vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.08;text-wrap:balance;}
+  h1 .thin{font-weight:500;color:var(--text-muted);}
+  .hero p.lead{max-width:600px;margin:20px auto 0;font-size:clamp(15px,1.8vw,17.5px);color:var(--text-secondary);}
+  .hero .btn{margin-top:32px;}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:16px 32px;border-radius:100px;font-size:16px;font-weight:700;
+    cursor:pointer;border:none;font-family:inherit;text-decoration:none;
+    background:var(--cta-bg);color:var(--cta-text);
+    transition:transform .2s var(--ease),opacity .2s var(--ease);
+  }
+  .btn:hover{opacity:.88;transform:translateY(-1px);}
+  .btn:active{transform:scale(.97);}
+  .btn:focus-visible{outline:2px solid var(--coral);outline-offset:2px;}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:56px;}
+  .stat{padding:22px 18px;text-align:center;}
+  .stat b{display:block;font-size:clamp(22px,3.4vw,30px);font-weight:800;color:var(--coral);letter-spacing:-.02em;}
+  .stat span{font-size:13px;color:var(--text-muted);margin-top:5px;display:block;}
+
+  .section{padding:0 0 56px;}
+  .section-head{margin-bottom:26px;}
+  .section-head h2{font-size:clamp(23px,3.4vw,32px);font-weight:800;letter-spacing:-.025em;text-wrap:balance;}
+  .section-head p{color:var(--text-secondary);font-size:15px;margin-top:10px;max-width:620px;}
+
+  .about p{color:var(--text-secondary);font-size:15.5px;line-height:1.7;margin-bottom:14px;}
+  .about p:last-child{margin-bottom:0;}
+  .about strong{color:var(--text);font-weight:700;}
+  .about-card{padding:30px 32px;}
+
+  .cases{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .case{padding:26px;display:flex;flex-direction:column;}
+  .case-head{display:flex;align-items:center;gap:15px;margin-bottom:16px;}
+  .case-head img{
+    flex:none;width:58px;height:58px;border-radius:50%;object-fit:cover;
+    border:2px solid var(--glass-border-strong);background:var(--glass-bg);
+  }
+  .case-head h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;line-height:1.25;}
+  .case-head .handle{font-size:13px;color:var(--text-muted);margin-top:3px;}
+  .case p{font-size:14.5px;color:var(--text-secondary);line-height:1.6;margin-bottom:18px;}
+  .case-stats{display:flex;gap:26px;margin-top:auto;}
+  .case-stats b{display:block;font-size:19px;font-weight:800;letter-spacing:-.01em;}
+  .case-stats span{font-size:12px;color:var(--text-muted);}
+
+  .brands{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .brand{padding:20px 22px;display:flex;gap:14px;align-items:flex-start;}
+  .brand img{flex:none;width:42px;height:42px;border-radius:11px;object-fit:cover;border:1px solid var(--glass-border);}
+  .brand h4{font-size:15.5px;font-weight:700;margin-bottom:5px;}
+  .brand p{font-size:13.5px;color:var(--text-secondary);line-height:1.55;}
+
+  .form-card{max-width:540px;margin:0 auto;padding:38px 34px;}
+  .form-card h2{font-size:clamp(22px,3.2vw,28px);font-weight:800;letter-spacing:-.02em;text-align:center;text-wrap:balance;}
+  .form-card p.sub{color:var(--text-secondary);font-size:14.5px;text-align:center;margin:12px auto 26px;max-width:420px;}
+  .diag-summary{
+    border:1px solid var(--coral-border);background:var(--coral-soft);
+    border-radius:14px;padding:16px 18px;margin-bottom:24px;display:none;
+  }
+  .diag-summary h4{font-size:12.5px;font-weight:700;color:var(--coral);letter-spacing:.03em;text-transform:uppercase;margin-bottom:10px;}
+  .diag-summary ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .diag-summary li{display:flex;justify-content:space-between;gap:14px;font-size:13.5px;color:var(--text-secondary);}
+  .diag-summary li b{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:13.5px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;}
+  .field input{
+    width:100%;padding:15px 16px;border-radius:13px;
+    background:var(--glass-bg);border:1px solid var(--glass-border-strong);
+    color:var(--text);font-family:inherit;font-size:16px;outline:none;
+  }
+  .field input::placeholder{color:var(--text-muted);}
+  .field input:focus{border-color:var(--coral);}
+  .form-card .btn{width:100%;margin-top:8px;}
+  #formMsg{
+    display:none;text-align:center;padding:15px;border-radius:13px;
+    background:var(--glass-bg);font-size:14px;margin-top:16px;color:var(--text-secondary);
+  }
+  #formMsg.ok{border:1px solid var(--good);color:var(--good);}
+  #formMsg.err{border:1px solid var(--bad);color:var(--bad);}
+
+  footer{padding:20px 0 50px;text-align:center;color:var(--text-muted);font-size:13px;}
+  footer a{color:var(--text-muted);text-decoration:underline;text-underline-offset:3px;}
+  footer a:hover{color:var(--text);}
+
+  @media (max-width:720px){
+    .cases,.brands{grid-template-columns:1fr;}
+    .stats{grid-template-columns:1fr;}
+    .about-card,.form-card{padding:26px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <section class="hero">
+    <span class="eyebrow">Meta Ads &middot; Instagram &amp; Facebook</span>
+    <h1>Voronkangizdagi teshikni<br><span class="thin">birga topamiz va yopamiz.</span></h1>
+    <p class="lead">Diagnostika raqamlaringizni ko'rsatdi. Endi ularni real biznes natijasiga aylantirish kerak &mdash; quyida men ishlagan loyihalar va aniq raqamlar bilan tanishing.</p>
+    <a href="#lead" class="btn">Bepul diagnostikaga yozilish</a>
+  </section>
+
+  <div class="stats">
+    <div class="stat glass"><b>10+</b><span>yirik loyiha</span></div>
+    <div class="stat glass"><b>5x</b><span>gacha lid arzonlashishi</span></div>
+    <div class="stat glass"><b>90%+</b><span>o'rtacha lid sifati</span></div>
+  </div>
+
+  <section class="section about">
+    <div class="section-head"><h2>Men haqimda</h2></div>
+    <div class="about-card glass">
+      <p>Men <strong>Humoyun Olimov</strong> &mdash; Meta Ads (Instagram va Facebook) bo'yicha targeting mutaxassisiman. Asosiy ishim shunchaki lid keltirish emas, balki <strong>sotuvga aylanadigan mijoz</strong> olib kelish.</p>
+      <p>Ko'p tadbirkorda muammo reklama byudjetida emas &mdash; voronkaning qaysidir bosqichida: noto'g'ri auditoriya, sifatsiz lid, yoki sekin javob berilayotgan sotuv jarayonida. Shuning uchun men har bir loyihani <strong>raqamlardan boshlayman</strong>: lid narxi, lid sifati, sotuv konversiyasi va mijoz narxi (CAC).</p>
+      <p>Quyida &mdash; turli sohalardagi mijozlarim bilan qo'lga kiritilgan haqiqiy ko'rsatkichlar.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Keyslar va natijalar</h2>
+      <p>Har bir raqam real hisobdan olingan &mdash; onlayn ta'limdan tibbiyot va e-commerce'gacha.</p>
+    </div>
+    <div class="cases">
+
+      <div class="case glass">
+        <div class="case-head">
+          <img src="https://humoyunolimov.vercel.app/avatars/dilfuza.jpg" alt="Dilfuza Akmalovna" loading="lazy">
+          <div>
+            <h3>"FASOHAT" notiqlik kursi</h3>
+            <div class="handle">@dilfuza_akmalovna</div>
+          </div>
+        </div>
+        <p>Onlayn kurs sotuvlarini oshirish. Auditoriya qayta sozlandi va creative'lar yangilandi.</p>
+        <div class="case-stats">
+          <div><b>$0.36</b><span>Lid narxi</span></div>
+          <div><b>90%+</b><span>Lid sifati</span></div>
+        </div>
+      </div>
+
+      <div class="case glass">
+        <div class="case-head">
+          <img src="https://humoyunolimov.vercel.app/avatars/city-dental.jpg" alt="City Dental Clinic" loading="lazy">
+          <div>
+            <h3>City Dental Clinic</h3>
+            <div class="handle">@city_dental.uz</div>
+          </div>
+        </div>
+        <p>Mijozlar oqimini kengaytirish. Qimmat trafik to'xtatilib, byudjet ishlayotgan to'plamlarga yo'naltirildi.</p>
+        <div class="case-stats">
+          <div><b>$2.37&rarr;$0.47</b><span>Lid narxi</span></div>
+          <div><b>~5x</b><span>Arzonlashish</span></div>
+        </div>
+      </div>
+
+      <div class="case glass">
+        <div class="case-head">
+          <img src="https://humoyunolimov.vercel.app/avatars/shuhrat-boymuradov.jpg" alt="Shuhrat Boymuradov" loading="lazy">
+          <div>
+            <h3>Shuhrat Boymuradov</h3>
+            <div class="handle">@shuhrat.boymuradov &mdash; plastik jarroh</div>
+          </div>
+        </div>
+        <p>Yuqori chekli xizmat uchun konsultatsiyaga yoziluvchilar oqimi qurildi.</p>
+        <div class="case-stats">
+          <div><b>$1+&rarr;$0.24</b><span>Lid narxi</span></div>
+          <div><b>2x</b><span>Konsultatsiya</span></div>
+        </div>
+      </div>
+
+      <div class="case glass">
+        <div class="case-head">
+          <img src="https://humoyunolimov.vercel.app/avatars/sobir-said.jpg" alt="Zamonaviy Tabobat" loading="lazy">
+          <div>
+            <h3>Zamonaviy Tabobat</h3>
+            <div class="handle">@sobirsaid_</div>
+          </div>
+        </div>
+        <p>Avtomatlashtirilgan sotuv tizimi: reklamadan to yakuniy xaridgacha bo'lgan yo'l qurildi.</p>
+        <div class="case-stats">
+          <div><b>400+</b><span>Oylik sotuv</span></div>
+          <div><b>643K</b><span>Obunachi</span></div>
+        </div>
+      </div>
+
+      <div class="case glass">
+        <div class="case-head">
+          <img src="https://humoyunolimov.vercel.app/avatars/piknic.jpg" alt="Piknic Uzbekistan" loading="lazy">
+          <div>
+            <h3>Piknic Uzbekistan</h3>
+            <div class="handle">@piknic_uz</div>
+          </div>
+        </div>
+        <p>Sayt va forma orqali barqaror lid oqimi &mdash; direct'dagi tartibsizlik o'rniga.</p>
+        <div class="case-stats">
+          <div><b>$0.30</b><span>Forma lidi</span></div>
+          <div><b>151K</b><span>Obunachi</span></div>
+        </div>
+      </div>
+
+      <div class="case glass">
+        <div class="case-head">
+          <img src="https://humoyunolimov.vercel.app/logos/tarozi-klass.jpg" alt="Tarozi Klass" loading="lazy">
+          <div>
+            <h3>Tarozi Klass</h3>
+            <div class="handle">B2B / B2G segmenti</div>
+          </div>
+        </div>
+        <p>Narxi $30,000 dan $200,000 gacha bo'lgan tonnajli sanoat tarozilari &mdash; uzoq sotuv sikli bilan ishlash.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Hamkorlik qilingan brendlar</h2></div>
+    <div class="brands">
+      <div class="brand glass">
+        <img src="https://humoyunolimov.vercel.app/logos/zin-nur.jpg" alt="Zin-Nur Online" loading="lazy">
+        <div><h4>Zin-Nur Online</h4><p>Arab tilini o'rgatuvchi onlayn ta'lim akademiyasi.</p></div>
+      </div>
+      <div class="brand glass">
+        <img src="https://humoyunolimov.vercel.app/logos/fenix-academy.jpg" alt="Fenix Academy" loading="lazy">
+        <div><h4>Fenix Academy</h4><p>Robototexnika, IT va sun'iy intellekt yo'nalishlarida o'quv markazi.</p></div>
+      </div>
+      <div class="brand glass">
+        <img src="https://humoyunolimov.vercel.app/logos/brigada-s.jpg" alt="Brigada-S" loading="lazy">
+        <div><h4>Brigada-S</h4><p>Turar-joylarga "podklyuch" ta'mirlash xizmatlari.</p></div>
+      </div>
+      <div class="brand glass">
+        <img src="https://humoyunolimov.vercel.app/logos/demiks.jpg" alt="Demiks Premium" loading="lazy">
+        <div><h4>Demiks Premium</h4><p>Kiyim do'konlari uchun ulgurji kiyim yetkazib beruvchi brend.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="lead">
+    <div class="form-card glass">
+      <h2>Bepul diagnostikaga yozilish</h2>
+      <p class="sub">Raqamlaringizni birga ko'rib chiqamiz va voronkangizdagi asosiy muammoni aniqlaymiz. 24 soat ichida bog'lanaman.</p>
+
+      <div class="diag-summary" id="diagSummary">
+        <h4>Sizning diagnostika natijangiz</h4>
+        <ul id="diagList"></ul>
+      </div>
+
+      <form id="leadForm">
+        <div class="field">
+          <label for="name">Ismingiz</label>
+          <input id="name" type="text" placeholder="Ismingizni kiriting" required>
+        </div>
+        <div class="field">
+          <label for="phone">Telefon raqam</label>
+          <input id="phone" type="tel" placeholder="+998 90 123 45 67" required>
+        </div>
+        <button type="submit" class="btn" id="submitBtn">Yuborish</button>
+      </form>
+      <div id="formMsg"></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2026 Humoyun Olimov &middot; <a href="index.html">Diagnostikaga qaytish</a>
+</footer>
+
+<script>
+(function(){
+  var diag = null;
+  try{ diag = JSON.parse(localStorage.getItem('diag') || 'null'); }catch(e){}
+
+  if (diag && diag.budget){
+    var rows = [
+      ['Soha', diag.niche],
+      ['Byudjet', '$' + diag.budget + '/oy'],
+      ['Lidlar', diag.leads + ' ta/oy'],
+      ['Lid sifati', diag.quality + '%'],
+      ['Sotuv konversiyasi', diag.conversion + '%'],
+      ['Mahsulot narxi', '$' + diag.avgCheck],
+      ['Asosiy muammo', diag.problem]
+    ];
+    var list = document.getElementById('diagList');
+    rows.forEach(function(r){
+      if (!r[1]) return;
+      var li = document.createElement('li');
+      var k = document.createElement('span'); k.textContent = r[0];
+      var v = document.createElement('b'); v.textContent = r[1];
+      li.appendChild(k); li.appendChild(v); list.appendChild(li);
+    });
+    document.getElementById('diagSummary').style.display = 'block';
+  }
+
+  var form = document.getElementById('leadForm');
+  var msg = document.getElementById('formMsg');
+  var btn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var name = document.getElementById('name').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+
+    if (phone.replace(/\D/g,'').length < 9){
+      msg.className = 'err'; msg.style.display = 'block';
+      msg.textContent = "Iltimos, telefon raqamni to'liq kiriting (kamida 9 ta raqam).";
+      return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Yuborilmoqda...';
+    try{
+      var res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ name: name, phone: phone, diag: diag })
+      });
+      if (!res.ok) throw new Error('failed');
+      form.style.display = 'none';
+      msg.className = 'ok'; msg.style.display = 'block';
+      msg.textContent = "Rahmat! Ma'lumotlaringiz qabul qilindi, 24 soat ichida bog'lanaman.";
+    }catch(err){
+      msg.className = 'err'; msg.style.display = 'block';
+      msg.textContent = "Xatolik yuz berdi. Iltimos, birozdan so'ng qayta urinib ko'ring.";
+      btn.disabled = false; btn.textContent = 'Yuborish';
+    }
+  });
+})();
+<\/script>
+</body>
+</html>
