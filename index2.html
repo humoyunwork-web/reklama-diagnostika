@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reklama diagnostikasi &mdash; Nega sotuv bo'lmayapti?</title>
+<meta name="description" content="Targetga sarflagan pulingiz nega natija bermayotganini 60 soniyada aniqlang. Byudjet, lid narxi, lid sifati va sotuv konversiyasi asosida bepul tahlil.">
+
+<style>
+  :root{
+    --text:#f5f2ff;
+    --text-secondary:#c7bfe6;
+    --text-muted:#8d84ac;
+    --coral:#ff9d76;
+    --coral-soft:rgba(255,143,102,.15);
+    --coral-border:rgba(255,143,102,.32);
+    --cta-bg:#f5f2ff;
+    --cta-text:#1c1440;
+    --glass-bg:rgba(255,255,255,.055);
+    --glass-bg-strong:rgba(255,255,255,.09);
+    --glass-border:rgba(255,255,255,.13);
+    --glass-border-strong:rgba(255,255,255,.22);
+    --radius:20px;
+    --max:840px;
+    --ease:cubic-bezier(.25,.1,.25,1);
+    --good:#7ee0a8;
+    --good-soft:rgba(126,224,168,.14);
+    --good-border:rgba(126,224,168,.32);
+    --warn:#ffd27a;
+    --warn-soft:rgba(255,210,122,.14);
+    --warn-border:rgba(255,210,122,.34);
+    --bad:#ff8f8f;
+    --bad-soft:rgba(255,143,143,.14);
+    --bad-border:rgba(255,143,143,.34);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--text);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    background-color:#0a0818;
+    min-height:100vh;
+    background-image:
+      radial-gradient(55% 45% at 12% 8%, rgba(139,124,246,.30), transparent 62%),
+      radial-gradient(45% 40% at 92% 6%, rgba(255,143,102,.16), transparent 60%),
+      radial-gradient(55% 50% at 10% 92%, rgba(79,110,255,.14), transparent 62%),
+      radial-gradient(50% 45% at 95% 96%, rgba(255,143,102,.12), transparent 60%);
+    background-repeat:no-repeat;
+  }
+  a{color:inherit;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 20px;}
+  .glass{
+    background:var(--glass-bg);
+    border:1px solid var(--glass-border);
+    -webkit-backdrop-filter:blur(16px);
+    backdrop-filter:blur(16px);
+    border-radius:var(--radius);
+  }
+
+  /* ---------- INTRO ---------- */
+  .intro{padding:56px 0 44px;text-align:center;animation:fadeUp .6s var(--ease) both;}
+  .eyebrow{
+    display:inline-block;font-size:13px;font-weight:600;color:#e9dfff;
+    letter-spacing:.02em;background:var(--glass-bg);border:1px solid var(--glass-border);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    padding:7px 16px;border-radius:100px;margin-bottom:22px;
+  }
+  h1{font-size:clamp(30px,5.2vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.08;text-wrap:balance;}
+  h1 .thin{font-weight:500;color:var(--text-muted);}
+  .intro p.lead{max-width:520px;margin:18px auto 0;font-size:clamp(15px,1.8vw,17px);color:var(--text-secondary);}
+
+  /* ---------- QUIZ CARD ---------- */
+  .quiz-card{padding:40px 36px;margin-top:8px;animation:fadeUp .6s var(--ease) both;}
+  .progress{display:flex;gap:6px;margin-bottom:30px;}
+  .progress i{flex:1;height:4px;border-radius:4px;background:var(--glass-border-strong);transition:background .3s var(--ease);}
+  .progress i.done{background:var(--coral);}
+
+  .step{display:none;}
+  .step.active{display:block;animation:fadeUp .4s var(--ease) both;}
+  .step .tag{font-size:12.5px;font-weight:700;color:var(--coral);letter-spacing:.04em;text-transform:uppercase;margin-bottom:10px;}
+  .step h2{font-size:clamp(20px,3vw,25px);font-weight:700;letter-spacing:-.015em;line-height:1.3;text-wrap:balance;}
+  .step p.hint{color:var(--text-muted);font-size:14px;margin-top:8px;}
+
+  .num-input{
+    margin-top:26px;display:flex;align-items:baseline;gap:10px;
+    border-bottom:2px solid var(--glass-border-strong);padding-bottom:12px;
+  }
+  .num-input .prefix{font-size:clamp(24px,5vw,32px);font-weight:700;color:var(--text-muted);}
+  .num-input input{
+    flex:1;min-width:0;background:none;border:none;outline:none;
+    font-family:inherit;font-size:clamp(28px,6vw,38px);font-weight:700;color:var(--text);
+    letter-spacing:-.02em;
+  }
+  .num-input input::placeholder{color:var(--text-muted);font-weight:600;opacity:.5;}
+  .num-input .unit{font-size:15px;color:var(--text-muted);font-weight:600;white-space:nowrap;}
+  .num-input:focus-within{border-color:var(--coral);}
+
+  .text-area-wrap{margin-top:26px;}
+  .text-area-wrap textarea{
+    width:100%;min-height:96px;resize:none;
+    background:var(--glass-bg);border:1px solid var(--glass-border-strong);border-radius:14px;
+    padding:16px;font-family:inherit;font-size:16.5px;color:var(--text);outline:none;
+    line-height:1.5;
+  }
+  .text-area-wrap textarea::placeholder{color:var(--text-muted);}
+  .text-area-wrap textarea:focus{border-color:var(--coral);}
+
+  .slider-wrap{margin-top:30px;}
+  .slider-val{font-size:clamp(32px,7vw,44px);font-weight:800;color:var(--coral);letter-spacing:-.02em;}
+  input[type=range]{
+    width:100%;margin-top:18px;-webkit-appearance:none;appearance:none;
+    height:6px;border-radius:6px;background:var(--glass-border-strong);outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+    background:var(--coral);border:4px solid #1c1440;cursor:pointer;
+    box-shadow:0 2px 10px rgba(255,143,102,.5);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:26px;height:26px;border-radius:50%;background:var(--coral);
+    border:4px solid #1c1440;cursor:pointer;box-shadow:0 2px 10px rgba(255,143,102,.5);
+  }
+  .slider-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:12.5px;color:var(--text-muted);}
+
+  .step-actions{display:flex;gap:12px;margin-top:34px;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:15px 28px;border-radius:100px;font-size:15.5px;font-weight:700;
+    cursor:pointer;border:none;font-family:inherit;
+    transition:transform .2s var(--ease),opacity .2s var(--ease),background .2s var(--ease);
+  }
+  .btn:active{transform:scale(.97);}
+  .btn:focus-visible{outline:2px solid var(--coral);outline-offset:2px;}
+  .btn-primary{background:var(--cta-bg);color:var(--cta-text);flex:1;}
+  .btn-primary:hover{opacity:.88;transform:translateY(-1px);}
+  .btn-primary:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+  .btn-ghost{background:var(--glass-bg);color:var(--text);border:1px solid var(--glass-border);}
+  .btn-ghost:hover{background:var(--glass-bg-strong);}
+  .btn-block{width:100%;}
+
+  /* ---------- RESULTS ---------- */
+  #results{display:none;animation:fadeUp .5s var(--ease) both;}
+  .result-head{text-align:center;margin:8px 0 34px;}
+  .result-head .eyebrow{margin-bottom:18px;}
+  .result-head h2{font-size:clamp(24px,4vw,34px);font-weight:800;letter-spacing:-.025em;text-wrap:balance;}
+
+  /* funnel */
+  .funnel-card{padding:30px 32px;margin-bottom:20px;}
+  .funnel-card h3{font-size:13px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--text-muted);margin-bottom:22px;}
+  .funnel-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--glass-border);}
+  .funnel-row:first-of-type{border-top:none;}
+  .funnel-row .fr-label{font-size:14.5px;color:var(--text-secondary);font-weight:600;}
+  .funnel-row .fr-val{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
+  .funnel-bar{grid-column:1/-1;height:8px;border-radius:8px;background:var(--glass-border-strong);overflow:hidden;}
+  .funnel-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--coral),#8b7cf6);border-radius:8px;transition:width .8s var(--ease);}
+
+  /* metrics grid */
+  .metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+  .metric-card{padding:22px;}
+  .metric-card .m-label{font-size:12.5px;color:var(--text-muted);font-weight:600;letter-spacing:.02em;}
+  .metric-card .m-val{font-size:clamp(19px,3.5vw,25px);font-weight:800;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums;}
+  .metric-card .m-sub{font-size:12.5px;color:var(--text-muted);margin-top:4px;}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:100px;margin-top:10px;letter-spacing:.01em;}
+  .pill.good{background:var(--good-soft);color:var(--good);border:1px solid var(--good-border);}
+  .pill.warn{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn-border);}
+  .pill.bad{background:var(--bad-soft);color:var(--bad);border:1px solid var(--bad-border);}
+  .pill i{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+  /* diagnosis */
+  .diagnosis-card{padding:30px 32px;margin-bottom:20px;border-width:1.5px;}
+  .diagnosis-card.sev-bad{border-color:var(--bad-border);background:linear-gradient(180deg,var(--bad-soft),var(--glass-bg) 60%);}
+  .diagnosis-card.sev-warn{border-color:var(--warn-border);background:linear-gradient(180deg,var(--warn-soft),var(--glass-bg) 60%);}
+  .diagnosis-card.sev-good{border-color:var(--good-border);background:linear-gradient(180deg,var(--good-soft),var(--glass-bg) 60%);}
+  .diagnosis-card h3{font-size:12.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;margin-bottom:12px;}
+  .diagnosis-card.sev-bad h3{color:var(--bad);}
+  .diagnosis-card.sev-warn h3{color:var(--warn);}
+  .diagnosis-card.sev-good h3{color:var(--good);}
+  .diagnosis-card p{font-size:16px;color:var(--text);line-height:1.6;}
+  .diagnosis-card p strong{font-weight:700;}
+
+  .reco-card{padding:30px 32px;margin-bottom:24px;}
+  .reco-card h3{font-size:13px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--text-muted);margin-bottom:18px;}
+  .reco-group{margin-bottom:20px;}
+  .reco-group:last-child{margin-bottom:0;}
+  .reco-group .rg-title{font-size:14.5px;font-weight:700;color:var(--coral);margin-bottom:10px;}
+  .reco-group ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .reco-group li{font-size:14.5px;color:var(--text-secondary);line-height:1.5;padding-left:20px;position:relative;}
+  .reco-group li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--coral);}
+
+  .cta-card{
+    padding:38px 32px;text-align:center;margin-bottom:24px;
+    border:1.5px solid var(--coral-border);
+    background:linear-gradient(160deg, var(--coral-soft), var(--glass-bg) 65%);
+    box-shadow:0 20px 60px -24px rgba(255,143,102,.45);
+  }
+  .cta-card .eyebrow{
+    margin-bottom:16px;background:var(--coral-soft);border-color:var(--coral-border);color:var(--coral);
+  }
+  .cta-card h3{font-size:22px;font-weight:800;letter-spacing:-.015em;margin-bottom:10px;text-wrap:balance;}
+  .cta-card p{color:var(--text-secondary);font-size:14.5px;line-height:1.6;max-width:460px;margin:0 auto 26px;}
+  .cta-card .btn{display:inline-flex;font-size:16.5px;padding:17px 34px;animation:pulseGlow 2.4s ease-in-out infinite;}
+  .cta-card .btn:hover{animation-play-state:paused;}
+  @keyframes pulseGlow{
+    0%,100%{box-shadow:0 0 0 0 rgba(255,157,118,.55);}
+    50%{box-shadow:0 0 0 14px rgba(255,157,118,0);}
+  }
+  @media (prefers-reduced-motion:reduce){.cta-card .btn{animation:none;}}
+
+  .push-toast{
+    position:fixed;left:16px;right:16px;bottom:16px;z-index:50;
+    max-width:430px;margin:0 auto;
+    display:flex;gap:13px;align-items:flex-start;
+    padding:15px 16px;border-radius:18px;
+    background:rgba(24,18,52,.94);border:1px solid var(--coral-border);
+    box-shadow:0 24px 60px -16px rgba(0,0,0,.75);
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    text-decoration:none;color:inherit;cursor:pointer;
+    transform:translateY(160%);opacity:0;pointer-events:none;
+    transition:transform .5s var(--ease),opacity .5s var(--ease);
+  }
+  .push-toast.show{transform:translateY(0);opacity:1;pointer-events:auto;}
+  .push-toast .pt-icon{
+    flex:none;width:38px;height:38px;border-radius:11px;
+    background:var(--coral);display:flex;align-items:center;justify-content:center;
+  }
+  .push-toast .pt-icon svg{width:20px;height:20px;}
+  .push-toast .pt-body{flex:1;min-width:0;}
+  .push-toast .pt-title{font-size:14.5px;font-weight:700;letter-spacing:-.01em;display:block;}
+  .push-toast .pt-text{font-size:13px;color:var(--text-secondary);line-height:1.45;margin-top:3px;display:block;}
+  .push-toast .pt-close{
+    flex:none;background:none;border:none;color:var(--text-muted);
+    font-size:20px;line-height:1;cursor:pointer;padding:0 2px;font-family:inherit;
+  }
+  .push-toast .pt-close:hover{color:var(--text);}
+
+  .result-actions{text-align:center;padding:10px 0 40px;}
+  .result-actions button{background:none;border:none;color:var(--text-muted);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .result-actions button:hover{color:var(--text);}
+
+  footer{padding:20px 0 50px;text-align:center;color:var(--text-muted);font-size:13px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion:reduce){.intro,.quiz-card,.step.active,#results{animation:none;}}
+
+  @media (max-width:560px){
+    .quiz-card{padding:30px 22px;}
+    .metrics-grid{grid-template-columns:1fr;}
+    .funnel-card,.diagnosis-card,.reco-card{padding:24px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="intro">
+    <span class="eyebrow">Bepul &middot; 60 soniya &middot; 6 ta savol</span>
+    <h1>Targetga pul ketyapti,<br><span class="thin">lekin sotuv yo'q. Nega?</span></h1>
+    <p class="lead">6 ta savolga javob bering &mdash; voronangizning aynan qaysi bosqichida pul yo'qolayotganini ko'rsatib beramiz.</p>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-card glass" id="quiz">
+    <div class="progress" id="progress"></div>
+
+    <form id="quizForm">
+      <div class="step active" data-step="1">
+        <div class="tag">1-savol</div>
+        <h2>Oyiga targetga (reklamaga) qancha pul sarflaysiz?</h2>
+        <p class="hint">Instagram/Facebook reklama byudjeti, oylik.</p>
+        <div class="num-input">
+          <span class="prefix">$</span>
+          <input type="text" inputmode="numeric" id="budget" placeholder="500" required>
+          <span class="unit">/ oy</span>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn btn-primary btn-block" data-next>Davom etish</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="2">
+        <div class="tag">2-savol</div>
+        <h2>Shu byudjetdan oyiga nechta lid (murojaat) kelyapti?</h2>
+        <p class="hint">Komment, direct, forma yoki qo'ng'iroq &mdash; barchasi qo'shib hisoblang.</p>
+        <div class="num-input">
+          <input type="text" inputmode="numeric" id="leads" placeholder="120" required>
+          <span class="unit">ta / oy</span>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn btn-ghost" data-back>Orqaga</button>
+          <button type="button" class="btn btn-primary" data-next>Davom etish</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="3">
+        <div class="tag">3-savol</div>
+        <h2>Qaysi sohada faoliyat yuritasiz?</h2>
+        <p class="hint">Nima mahsulot yoki xizmat sotasiz? Masalan: onlayn kurs, go'zallik saloni, kiyim do'koni, stomatologiya.</p>
+        <div class="text-area-wrap">
+          <textarea id="niche" placeholder="Masalan: onlayn ingliz tili kursi" required></textarea>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn btn-ghost" data-back>Orqaga</button>
+          <button type="button" class="btn btn-primary" data-next>Davom etish</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="4">
+        <div class="tag">4-savol</div>
+        <h2>Kelgan lidlarning necha foizi sifatli?</h2>
+        <p class="hint">Ya'ni haqiqiy qiziqqan, to'g'ri auditoriyadan &mdash; "shunchaki narx so'ragan" emas.</p>
+        <div class="slider-wrap">
+          <div class="slider-val" id="qualityVal">50%</div>
+          <input type="range" id="quality" min="0" max="100" value="50" step="5">
+          <div class="slider-labels"><span>0% &mdash; deyarli hammasi bo'sh</span><span>100% &mdash; hammasi sifatli</span></div>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn btn-ghost" data-back>Orqaga</button>
+          <button type="button" class="btn btn-primary" data-next>Davom etish</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="5">
+        <div class="tag">5-savol</div>
+        <h2>Sifatli lidlardan necha foizi haqiqiy xaridorga aylanadi?</h2>
+        <p class="hint">Sotuv (savdo) konversiyasi &mdash; siz bilan gaplashgandan keyin pul to'lab xarid qiladiganlar.</p>
+        <div class="slider-wrap">
+          <div class="slider-val" id="convVal">15%</div>
+          <input type="range" id="conversion" min="0" max="100" value="15" step="1">
+          <div class="slider-labels"><span>0% &mdash; hech kim sotib olmaydi</span><span>100% &mdash; hammasi sotib oladi</span></div>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn btn-ghost" data-back>Orqaga</button>
+          <button type="button" class="btn btn-primary" data-next>Davom etish</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="6">
+        <div class="tag">6-savol</div>
+        <h2>Mahsulotingiz yoki xizmatingizning narxi qancha?</h2>
+        <p class="hint">O'rtacha chek &mdash; bitta mijoz sizga to'laydigan summa.</p>
+        <div class="num-input">
+          <span class="prefix">$</span>
+          <input type="text" inputmode="numeric" id="avgCheck" placeholder="30" required>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn btn-ghost" data-back>Orqaga</button>
+          <button type="button" class="btn btn-primary" id="submitBtn">Natijani ko'rish</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <div class="result-head">
+      <span class="eyebrow">Sizning tahlilingiz</span>
+      <h2 id="headline">Natija tayyor</h2>
+    </div>
+
+    <div class="funnel-card glass">
+      <h3>Voronangiz</h3>
+      <div class="funnel-row">
+        <div class="fr-label">Reklama byudjeti</div>
+        <div class="fr-val" id="fBudget">&mdash;</div>
+        <div class="funnel-bar"><span style="width:100%"></span></div>
+      </div>
+      <div class="funnel-row">
+        <div class="fr-label">Kelgan lidlar</div>
+        <div class="fr-val" id="fLeads">&mdash;</div>
+        <div class="funnel-bar"><span id="barLeads" style="width:100%"></span></div>
+      </div>
+      <div class="funnel-row">
+        <div class="fr-label">Sifatli lidlar</div>
+        <div class="fr-val" id="fQuality">&mdash;</div>
+        <div class="funnel-bar"><span id="barQuality" style="width:100%"></span></div>
+      </div>
+      <div class="funnel-row">
+        <div class="fr-label">Sotuvlar (mijozlar)</div>
+        <div class="fr-val" id="fSales">&mdash;</div>
+        <div class="funnel-bar"><span id="barSales" style="width:100%"></span></div>
+      </div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card glass">
+        <div class="m-label">Bitta lid narxi (CPL)</div>
+        <div class="m-val" id="mCpl">&mdash;</div>
+        <div class="m-sub">byudjet &divide; lidlar soni</div>
+        <div class="pill" id="pillCpl"></div>
+      </div>
+      <div class="metric-card glass">
+        <div class="m-label">Bitta mijoz narxi (CAC)</div>
+        <div class="m-val" id="mCac">&mdash;</div>
+        <div class="m-sub">byudjet &divide; sotuvlar soni</div>
+        <div class="pill" id="pillCac"></div>
+      </div>
+      <div class="metric-card glass">
+        <div class="m-label">Oylik daromad</div>
+        <div class="m-val" id="mRevenue">&mdash;</div>
+        <div class="m-sub">sotuvlar &times; mahsulot narxi</div>
+      </div>
+      <div class="metric-card glass">
+        <div class="m-label">Sof foyda / zarar</div>
+        <div class="m-val" id="mProfit">&mdash;</div>
+        <div class="m-sub">daromad &minus; byudjet</div>
+        <div class="pill" id="pillProfit"></div>
+      </div>
+    </div>
+
+    <div class="diagnosis-card glass" id="diagnosisCard">
+      <h3 id="diagTag">Asosiy muammo</h3>
+      <p id="diagText"></p>
+    </div>
+
+    <div class="reco-card glass">
+      <h3>Nima qilish kerak</h3>
+      <div id="recoList"></div>
+    </div>
+
+    <div class="cta-card glass" id="pdfCta" style="display:none">
+      <span class="eyebrow">Telegram bot</span>
+      <h3>To'liq xulosani PDF shaklida oling</h3>
+      <p>Barcha raqamlaringiz, tahlil va tavsiyalar bitta PDF faylda &mdash; Telegram bot sizga darhol yuboradi. Bonus sifatida 5 daqiqalik maxsus videoni ham beradi.</p>
+      <a id="pdfLink" href="#" target="_blank" rel="noopener" class="btn btn-primary">PDF xulosani olish</a>
+    </div>
+
+    <div class="result-actions">
+      <button type="button" id="restartBtn">Boshqa raqamlar bilan qayta hisoblash</button>
+    </div>
+  </div>
+
+</div>
+
+<a class="push-toast" id="pushToast" href="keyslar.html">
+  <span class="pt-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#1c1440" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg>
+  </span>
+  <span class="pt-body">
+    <span class="pt-title">Sizda sotuvlar bundan ham yomonmi?</span>
+    <span class="pt-text">Bepul diagnostikaga yoziling &mdash; voronkangizdagi teshikni birga topamiz.</span>
+  </span>
+  <button type="button" class="pt-close" id="pushClose" aria-label="Yopish">&times;</button>
+</a>
+
+<footer>&copy; 2026. Barcha huquqlar himoyalangan.</footer>
+
+<script>
+(function(){
+  var BOT_USERNAME = 'humoyun_olimov_bot';
+
+  var TOTAL_STEPS = 6;
+  var currentStep = 1;
+  var progressEl = document.getElementById('progress');
+  for (var i=0;i<TOTAL_STEPS;i++){
+    var dot = document.createElement('i');
+    progressEl.appendChild(dot);
+  }
+  function renderProgress(){
+    var dots = progressEl.children;
+    for (var i=0;i<dots.length;i++){
+      dots[i].classList.toggle('done', i < currentStep);
+    }
+  }
+  renderProgress();
+
+  function formatMoney(raw){
+    var digits = raw.replace(/\D/g,'');
+    if (!digits) return '';
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  function rawNumber(str){
+    return parseInt(String(str).replace(/\D/g,''),10) || 0;
+  }
+  ['budget','avgCheck'].forEach(function(id){
+    var el = document.getElementById(id);
+    el.addEventListener('input', function(){
+      var pos = el.selectionStart;
+      var before = el.value.length;
+      el.value = formatMoney(el.value);
+      var after = el.value.length;
+      el.selectionStart = el.selectionEnd = Math.max(0, pos + (after-before));
+    });
+  });
+
+  var qualitySlider = document.getElementById('quality');
+  var qualityVal = document.getElementById('qualityVal');
+  qualitySlider.addEventListener('input', function(){ qualityVal.textContent = qualitySlider.value + '%'; });
+
+  var convSlider = document.getElementById('conversion');
+  var convVal = document.getElementById('convVal');
+  convSlider.addEventListener('input', function(){ convVal.textContent = convSlider.value + '%'; });
+
+  function stepValid(n){
+    if (n===1) return rawNumber(document.getElementById('budget').value) > 0;
+    if (n===2) return rawNumber(document.getElementById('leads').value) > 0;
+    if (n===3) return document.getElementById('niche').value.trim().length > 0;
+    if (n===6) return rawNumber(document.getElementById('avgCheck').value) > 0;
+    return true;
+  }
+
+  function goToStep(n){
+    document.querySelectorAll('.step').forEach(function(s){
+      s.classList.toggle('active', parseInt(s.dataset.step,10) === n);
+    });
+    currentStep = n;
+    renderProgress();
+  }
+
+  document.querySelectorAll('[data-next]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if (!stepValid(currentStep)){
+        var field = document.querySelector('.step[data-step="'+currentStep+'"] input, .step[data-step="'+currentStep+'"] textarea');
+        if (field){ field.focus(); field.style.borderColor = 'var(--bad)'; setTimeout(function(){field.style.borderColor='';},1200); }
+        return;
+      }
+      if (currentStep < TOTAL_STEPS) goToStep(currentStep+1);
+    });
+  });
+  document.querySelectorAll('[data-back]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if (currentStep > 1) goToStep(currentStep-1);
+    });
+  });
+
+  function fmt(n){
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+  function fmtSigned(n){
+    var r = Math.round(n);
+    return (r<0?'-':'+') + '$' + Math.abs(r).toLocaleString('en-US');
+  }
+  function fmtInt(n){
+    return Math.round(n).toLocaleString('en-US');
+  }
+
+  function setPill(el, level, label){
+    el.className = 'pill ' + level;
+    el.innerHTML = '<i></i>' + label;
+  }
+
+  var SHEET_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSebBKFWeQmz3dASxqacMGWIztfTHFfaGkER0_9IehJUxDET7g/formResponse';
+  var SHEET_FIELDS = {
+    niche: 'entry.1746025051',
+    budget: 'entry.1094338327',
+    leads: 'entry.2147427610',
+    quality: 'entry.978320469',
+    conversion: 'entry.1325493126',
+    avgCheck: 'entry.1196195223'
+  };
+  function submitToSheet(data){
+    try{
+      var body = new URLSearchParams();
+      body.append(SHEET_FIELDS.niche, data.niche);
+      body.append(SHEET_FIELDS.budget, data.budget);
+      body.append(SHEET_FIELDS.leads, data.leads);
+      body.append(SHEET_FIELDS.quality, data.quality);
+      body.append(SHEET_FIELDS.conversion, data.conversion);
+      body.append(SHEET_FIELDS.avgCheck, data.avgCheck);
+      fetch(SHEET_URL, { method:'POST', mode:'no-cors', body: body }).catch(function(){});
+    }catch(e){}
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    if (!stepValid(6)){
+      var input = document.getElementById('avgCheck');
+      input.focus(); input.style.borderColor = 'var(--bad)';
+      setTimeout(function(){input.style.borderColor='';},1200);
+      return;
+    }
+
+    var budget = rawNumber(document.getElementById('budget').value);
+    var leads = rawNumber(document.getElementById('leads').value);
+    var niche = document.getElementById('niche').value.trim();
+    var quality = parseInt(qualitySlider.value,10);
+    var conversion = parseInt(convSlider.value,10);
+    var avgCheck = rawNumber(document.getElementById('avgCheck').value);
+
+    submitToSheet({ niche: niche, budget: budget, leads: leads, quality: quality, conversion: conversion, avgCheck: avgCheck });
+
+    var cpl = budget / leads;
+    var qualityLeads = leads * (quality/100);
+    var sales = qualityLeads * (conversion/100);
+    var salesRounded = Math.round(sales);
+    var cac = sales > 0 ? budget / sales : null;
+    var revenue = sales * avgCheck;
+    var profit = revenue - budget;
+    var roas = budget > 0 ? revenue / budget : 0;
+    var cplRatio = avgCheck > 0 ? (cpl / avgCheck) * 100 : 0;
+
+    document.getElementById('fBudget').textContent = fmt(budget);
+    document.getElementById('fLeads').textContent = fmtInt(leads) + ' ta';
+    document.getElementById('fQuality').textContent = fmtInt(qualityLeads) + ' ta';
+    document.getElementById('fSales').textContent = fmtInt(salesRounded) + ' ta';
+    document.getElementById('barLeads').style.width = '100%';
+    document.getElementById('barQuality').style.width = Math.max(4, quality) + '%';
+    document.getElementById('barSales').style.width = Math.max(2, (salesRounded/Math.max(leads,1))*100) + '%';
+
+    document.getElementById('mCpl').textContent = fmt(cpl);
+    document.getElementById('mCac').textContent = cac ? fmt(cac) : "hisoblab bo'lmadi";
+    document.getElementById('mRevenue').textContent = fmt(revenue);
+    document.getElementById('mProfit').textContent = fmtSigned(profit);
+    document.getElementById('mProfit').style.color = profit >= 0 ? 'var(--good)' : 'var(--bad)';
+
+    var cplStatus, qualityStatus, convStatus, profitStatus;
+
+    if (cplRatio > 15){ cplStatus = {sev:2, level:'bad', label:"Qimmat"}; }
+    else if (cplRatio > 5){ cplStatus = {sev:1, level:'warn', label:"O'rtacha"}; }
+    else { cplStatus = {sev:0, level:'good', label:"Arzon"}; }
+
+    if (quality < 35){ qualityStatus = {sev:2, level:'bad', label:"Past"}; }
+    else if (quality < 60){ qualityStatus = {sev:1, level:'warn', label:"O'rtacha"}; }
+    else { qualityStatus = {sev:0, level:'good', label:"Yaxshi"}; }
+
+    if (conversion < 10){ convStatus = {sev:2, level:'bad', label:"Past"}; }
+    else if (conversion < 25){ convStatus = {sev:1, level:'warn', label:"O'rtacha"}; }
+    else { convStatus = {sev:0, level:'good', label:"Yaxshi"}; }
+
+    if (cac === null || profit < 0){ profitStatus = {sev:2, level:'bad', label:"Zarar"}; }
+    else if (roas < 2.5){ profitStatus = {sev:1, level:'warn', label:"Past foyda"}; }
+    else { profitStatus = {sev:0, level:'good', label:"Sog'lom"}; }
+
+    setPill(document.getElementById('pillCpl'), cplStatus.level, cplStatus.label);
+    setPill(document.getElementById('pillCac'), profitStatus.level, profitStatus.label === 'Zarar' ? 'Zarar' : (cac && cac > avgCheck ? "Narxdan qimmat" : "Narxdan arzon"));
+    setPill(document.getElementById('pillProfit'), profitStatus.level, profitStatus.label);
+
+    var candidates = [
+      {key:'quality', status:qualityStatus, name:'lid sifati'},
+      {key:'conversion', status:convStatus, name:'sotuv konversiyasi'},
+      {key:'cpl', status:cplStatus, name:'lid narxi'}
+    ];
+    candidates.sort(function(a,b){ return b.status.sev - a.status.sev; });
+    var primary = candidates[0];
+
+    var diagCard = document.getElementById('diagnosisCard');
+    var diagTag = document.getElementById('diagTag');
+    var diagText = document.getElementById('diagText');
+    var headline = document.getElementById('headline');
+    diagCard.className = 'diagnosis-card glass sev-' + primary.status.level;
+
+    var diagTextHtml = '';
+    if (primary.status.sev === 0){
+      diagTag.textContent = "Umumiy holat";
+      headline.textContent = "Voronangiz nisbatan sog'lom";
+      diagTextHtml = "Barcha bosqichlar (lid narxi, sifat, konversiya) qoniqarli darajada. Oylik sof natijangiz <strong>" + fmtSigned(profit) + "</strong>. Endi asosiy vazifa &mdash; shu ko'rsatkichlarni saqlab, byudjetni ehtiyotkorlik bilan oshirib borish.";
+    } else if (primary.key === 'quality'){
+      diagTag.textContent = "Asosiy muammo: lid sifati";
+      headline.textContent = "Pul sifatsiz lidlarga ketyapti";
+      diagTextHtml = "Kelayotgan lidlarning atigi <strong>" + quality + "%</strong> i sifatli. Ya'ni har 10 lidning " + Math.round((100-quality)/10) + "+ tasi shunchaki qiziquvchan yoki noto'g'ri auditoriya &mdash; ular hech qachon xarid qilmaydi. Bu ko'pincha noto'g'ri auditoriya tanlash yoki noaniq reklama matnidan kelib chiqadi.";
+    } else if (primary.key === 'conversion'){
+      diagTag.textContent = "Asosiy muammo: sotuv jarayoni";
+      headline.textContent = "Lidlar bor, sotuv yo'q";
+      diagTextHtml = "Lid sifati (" + quality + "%) yomon emas, lekin sifatli lidlardan atigi <strong>" + conversion + "%</strong> i xaridorga aylanyapti. Demak, muammo reklamada emas &mdash; siz yoki jamoangiz lidga qanday javob berayotganida.";
+    } else {
+      diagTag.textContent = "Asosiy muammo: lid narxi";
+      headline.textContent = "Lid narxi mahsulot narxiga nisbatan qimmat";
+      diagTextHtml = "Bitta lid <strong>" + fmt(cpl) + "</strong> ga tushyapti &mdash; bu mahsulot narxingizning " + Math.round(cplRatio) + "% i. Sifat va konversiya normal bo'lsa ham, shu qimmat trafik butun voronani og'irlashtiradi.";
+    }
+    diagText.innerHTML = diagTextHtml;
+
+    var recoList = document.getElementById('recoList');
+    recoList.innerHTML = '';
+    function addGroup(title, items){
+      var group = document.createElement('div');
+      group.className = 'reco-group';
+      var h = document.createElement('div');
+      h.className = 'rg-title';
+      h.textContent = title;
+      var ul = document.createElement('ul');
+      items.forEach(function(t){
+        var li = document.createElement('li');
+        li.textContent = t;
+        ul.appendChild(li);
+      });
+      group.appendChild(h);
+      group.appendChild(ul);
+      recoList.appendChild(group);
+    }
+
+    if (qualityStatus.sev > 0){
+      addGroup("Lid sifatini oshirish uchun", [
+        "Reklama matnida narx yoki asosiy shartlarni oldindan aniq yozing — noaniqlik qiziqmagan lidlarni ko'paytiradi.",
+        "Auditoriyani torroq qiling: keng auditoriya o'rniga lookalike yoki aniq qiziqishlar bo'yicha sozlang.",
+        "Forma yoki birinchi xabarga filtrlovchi savol qo'shing (masalan, byudjet yoki joylashuv)."
+      ]);
+    }
+    if (convStatus.sev > 0){
+      addGroup("Sotuv konversiyasini oshirish uchun", [
+        "Lidga birinchi 5 daqiqa ichida javob bering — javob sekinlashgan sayin xarid ehtimoli keskin tushadi.",
+        "Savdo skripti va tez-tez uchraydigan e'tirozlarga tayyor javoblar yozib chiqing.",
+        "Har bir lidni jadval yoki CRM'da kuzatib boring — follow-up qilmaslik ko'p sotuvni yo'qotadi."
+      ]);
+    }
+    if (cplStatus.sev > 0){
+      addGroup("Lid narxini pasaytirish uchun", [
+        "Yomon ishlayotgan reklama to'plamlarini o'chirib, yaxshi natija berayotganlarga byudjetni qayta yo'naltiring.",
+        "Creative (video/rasm) va sarlavhalarni muntazam yangilab, A/B test qiling — eskirgan creative narxni oshiradi.",
+        "Pixel/konversiya optimallashtirishni to'g'ri sozlang, shunda algoritm arzonroq lidlarni topadi."
+      ]);
+    }
+    if (profitStatus.level === 'bad' && qualityStatus.sev===0 && convStatus.sev===0 && cplStatus.sev===0){
+      addGroup("Umumiy iqtisodiyot uchun", [
+        "Mijoz narxi (CAC) mahsulot narxidan yuqori — narxlash, upsell yoki qo'shimcha xizmatlar bilan o'rtacha chekni oshiring.",
+        "Xarajat va daromadni haftalik hisoblab boring, faqat lid soniga emas, real sotuvga qarab qaror qabul qiling."
+      ]);
+    }
+    if (recoList.children.length === 0){
+      addGroup("Saqlab qolish uchun", [
+        "Hozirgi auditoriya, creative va sotuv jarayonini o'zgartirmang — ular ishlayapti.",
+        "Byudjetni asta-sekin (haftasiga 15–20%) oshirib, natija barqarorligini kuzating."
+      ]);
+    }
+
+    try{
+      localStorage.setItem('diag', JSON.stringify({
+        niche: niche, budget: budget, leads: leads, quality: quality,
+        conversion: conversion, avgCheck: avgCheck,
+        cpl: Math.round(cpl), cac: cac ? Math.round(cac) : null,
+        revenue: Math.round(revenue), profit: Math.round(profit),
+        problem: diagTag.textContent
+      }));
+    }catch(e){}
+
+    document.getElementById('pdfLink').href =
+      'https://t.me/' + BOT_USERNAME + '?start=' +
+      [budget, leads, quality, conversion, avgCheck].join('-');
+    document.getElementById('pdfCta').style.display = 'block';
+
+    document.getElementById('quiz').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    var toast = document.getElementById('pushToast');
+    new IntersectionObserver(function(entries, obs){
+      if (entries[0].isIntersecting){ toast.classList.add('show'); obs.disconnect(); }
+    }, {threshold:.4}).observe(document.querySelector('.metrics-grid'));
+  });
+
+  document.getElementById('pushClose').addEventListener('click', function(e){
+    e.preventDefault(); e.stopPropagation();
+    document.getElementById('pushToast').classList.remove('show');
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    document.getElementById('quizForm').reset();
+    qualityVal.textContent = '50%';
+    convVal.textContent = '15%';
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+    goToStep(1);
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
