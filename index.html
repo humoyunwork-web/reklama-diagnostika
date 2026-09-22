@@ -209,7 +209,7 @@
   @media (prefers-reduced-motion:reduce){.cta-card .btn{animation:none;}}
 
   .push-toast{
-    position:fixed;left:16px;right:16px;bottom:16px;z-index:50;
+    position:fixed;left:16px;right:16px;top:16px;z-index:50;
     max-width:430px;margin:0 auto;
     display:flex;gap:13px;align-items:flex-start;
     padding:15px 16px;border-radius:18px;
@@ -217,7 +217,7 @@
     box-shadow:0 24px 60px -16px rgba(0,0,0,.75);
     -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
     text-decoration:none;color:inherit;cursor:pointer;
-    transform:translateY(160%);opacity:0;pointer-events:none;
+    transform:translateY(-160%);opacity:0;pointer-events:none;
     transition:transform .5s var(--ease),opacity .5s var(--ease);
   }
   .push-toast.show{transform:translateY(0);opacity:1;pointer-events:auto;}
