@@ -209,31 +209,42 @@
   @media (prefers-reduced-motion:reduce){.cta-card .btn{animation:none;}}
 
   .push-toast{
-    position:fixed;left:16px;right:16px;top:16px;z-index:50;
-    max-width:430px;margin:0 auto;
-    display:flex;gap:13px;align-items:flex-start;
-    padding:15px 16px;border-radius:18px;
-    background:rgba(24,18,52,.94);border:1px solid var(--coral-border);
-    box-shadow:0 24px 60px -16px rgba(0,0,0,.75);
-    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-    text-decoration:none;color:inherit;cursor:pointer;
-    transform:translateY(-160%);opacity:0;pointer-events:none;
-    transition:transform .5s var(--ease),opacity .5s var(--ease);
+    position:fixed;left:14px;right:14px;top:14px;z-index:50;
+    max-width:440px;margin:0 auto;
+    display:flex;gap:13px;align-items:center;
+    padding:14px 14px 14px 15px;border-radius:18px;
+    background:linear-gradient(135deg,#ff9d76,#ff6f47);
+    border:2px solid rgba(255,255,255,.55);
+    box-shadow:0 0 0 4px rgba(255,124,82,.22),0 26px 60px -14px rgba(255,111,71,.6),0 10px 30px -10px rgba(0,0,0,.6);
+    text-decoration:none;color:#241236;cursor:pointer;
+    transform:translateY(-180%);opacity:0;pointer-events:none;
+    transition:transform .55s var(--ease),opacity .45s var(--ease);
   }
-  .push-toast.show{transform:translateY(0);opacity:1;pointer-events:auto;}
+  .push-toast.show{transform:translateY(0);opacity:1;pointer-events:auto;animation:pushPulse 1.9s ease-in-out .6s 3;}
   .push-toast .pt-icon{
-    flex:none;width:38px;height:38px;border-radius:11px;
-    background:var(--coral);display:flex;align-items:center;justify-content:center;
+    flex:none;width:40px;height:40px;border-radius:12px;
+    background:#241236;display:flex;align-items:center;justify-content:center;
   }
-  .push-toast .pt-icon svg{width:20px;height:20px;}
+  .push-toast .pt-icon svg{width:21px;height:21px;}
   .push-toast .pt-body{flex:1;min-width:0;}
-  .push-toast .pt-title{font-size:14.5px;font-weight:700;letter-spacing:-.01em;display:block;}
-  .push-toast .pt-text{font-size:13px;color:var(--text-secondary);line-height:1.45;margin-top:3px;display:block;}
-  .push-toast .pt-close{
-    flex:none;background:none;border:none;color:var(--text-muted);
-    font-size:20px;line-height:1;cursor:pointer;padding:0 2px;font-family:inherit;
+  .push-toast .pt-title{font-size:15px;font-weight:800;letter-spacing:-.015em;display:block;line-height:1.25;}
+  .push-toast .pt-text{font-size:12.5px;color:rgba(36,18,54,.78);font-weight:600;line-height:1.4;margin-top:3px;display:block;}
+  .push-toast .pt-go{
+    flex:none;display:flex;align-items:center;justify-content:center;
+    width:28px;height:28px;border-radius:50%;background:rgba(36,18,54,.14);
+    font-size:17px;font-weight:700;line-height:1;padding-bottom:2px;
   }
-  .push-toast .pt-close:hover{color:var(--text);}
+  .push-toast .pt-close{
+    position:absolute;top:6px;right:8px;
+    background:none;border:none;color:rgba(36,18,54,.55);
+    font-size:17px;line-height:1;cursor:pointer;padding:2px 4px;font-family:inherit;
+  }
+  .push-toast .pt-close:hover{color:#241236;}
+  @keyframes pushPulse{
+    0%,100%{box-shadow:0 0 0 4px rgba(255,124,82,.22),0 26px 60px -14px rgba(255,111,71,.6),0 10px 30px -10px rgba(0,0,0,.6);}
+    50%{box-shadow:0 0 0 10px rgba(255,124,82,0),0 26px 60px -14px rgba(255,111,71,.75),0 10px 30px -10px rgba(0,0,0,.6);}
+  }
+  @media (prefers-reduced-motion:reduce){.push-toast.show{animation:none;}}
 
   .result-actions{text-align:center;padding:10px 0 40px;}
   .result-actions button{background:none;border:none;color:var(--text-muted);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
@@ -437,12 +448,13 @@
 
 <a class="push-toast" id="pushToast" href="keyslar.html">
   <span class="pt-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#1c1440" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#ff9d76" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg>
   </span>
   <span class="pt-body">
     <span class="pt-title">Sizda sotuvlar bundan ham yomonmi?</span>
-    <span class="pt-text">Bepul diagnostikaga yoziling &mdash; voronkangizdagi teshikni birga topamiz.</span>
+    <span class="pt-text">Bepul diagnostika &mdash; teshikni birga topamiz</span>
   </span>
+  <span class="pt-go">&rsaquo;</span>
   <button type="button" class="pt-close" id="pushClose" aria-label="Yopish">&times;</button>
 </a>
 

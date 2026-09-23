@@ -52,7 +52,7 @@
     padding:7px 16px;border-radius:100px;margin-bottom:22px;
   }
 
-  .hero{padding:60px 0 50px;text-align:center;}
+  .hero{padding:44px 0 36px;text-align:center;}
   h1{font-size:clamp(29px,5vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.08;text-wrap:balance;}
   h1 .thin{font-weight:500;color:var(--text-muted);}
   .hero p.lead{max-width:600px;margin:20px auto 0;font-size:clamp(15px,1.8vw,17.5px);color:var(--text-secondary);}
@@ -69,42 +69,37 @@
   .btn:active{transform:scale(.97);}
   .btn:focus-visible{outline:2px solid var(--coral);outline-offset:2px;}
 
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:56px;}
-  .stat{padding:22px 18px;text-align:center;}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:44px;}
+  .stat{padding:18px 14px;text-align:center;}
   .stat b{display:block;font-size:clamp(22px,3.4vw,30px);font-weight:800;color:var(--coral);letter-spacing:-.02em;}
   .stat span{font-size:13px;color:var(--text-muted);margin-top:5px;display:block;}
 
-  .section{padding:0 0 56px;}
-  .section-head{margin-bottom:26px;}
+  .section{padding:0 0 42px;}
+  .section-head{margin-bottom:20px;}
   .section-head h2{font-size:clamp(23px,3.4vw,32px);font-weight:800;letter-spacing:-.025em;text-wrap:balance;}
   .section-head p{color:var(--text-secondary);font-size:15px;margin-top:10px;max-width:620px;}
 
-  .about p{color:var(--text-secondary);font-size:15.5px;line-height:1.7;margin-bottom:14px;}
-  .about p:last-child{margin-bottom:0;}
-  .about strong{color:var(--text);font-weight:700;}
-  .about-card{padding:30px 32px;}
-
-  .cases{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  .case{padding:26px;display:flex;flex-direction:column;}
-  .case-head{display:flex;align-items:center;gap:15px;margin-bottom:16px;}
+  .cases{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .case{padding:22px;display:flex;flex-direction:column;}
+  .case-head{display:flex;align-items:center;gap:13px;margin-bottom:12px;}
   .case-head img{
-    flex:none;width:58px;height:58px;border-radius:50%;object-fit:cover;
+    flex:none;width:52px;height:52px;border-radius:50%;object-fit:cover;
     border:2px solid var(--glass-border-strong);background:var(--glass-bg);
   }
   .case-head h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;line-height:1.25;}
   .case-head .handle{font-size:13px;color:var(--text-muted);margin-top:3px;}
-  .case p{font-size:14.5px;color:var(--text-secondary);line-height:1.6;margin-bottom:18px;}
+  .case p{font-size:14px;color:var(--text-secondary);line-height:1.55;margin-bottom:16px;}
   .case-stats{display:flex;gap:26px;margin-top:auto;}
   .case-stats b{display:block;font-size:19px;font-weight:800;letter-spacing:-.01em;}
   .case-stats span{font-size:12px;color:var(--text-muted);}
 
-  .brands{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .brand{padding:20px 22px;display:flex;gap:14px;align-items:flex-start;}
-  .brand img{flex:none;width:42px;height:42px;border-radius:11px;object-fit:cover;border:1px solid var(--glass-border);}
-  .brand h4{font-size:15.5px;font-weight:700;margin-bottom:5px;}
-  .brand p{font-size:13.5px;color:var(--text-secondary);line-height:1.55;}
+  .brands{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .brand{padding:16px 18px;display:flex;gap:13px;align-items:center;}
+  .brand img{flex:none;width:40px;height:40px;border-radius:11px;object-fit:cover;border:1px solid var(--glass-border);}
+  .brand h4{font-size:15px;font-weight:700;margin-bottom:2px;}
+  .brand p{font-size:13px;color:var(--text-muted);line-height:1.45;}
 
-  .form-card{max-width:540px;margin:0 auto;padding:38px 34px;}
+  .form-card{max-width:540px;margin:0 auto;padding:32px 28px;}
   .form-card h2{font-size:clamp(22px,3.2vw,28px);font-weight:800;letter-spacing:-.02em;text-align:center;text-wrap:balance;}
   .form-card p.sub{color:var(--text-secondary);font-size:14.5px;text-align:center;margin:12px auto 26px;max-width:420px;}
   .diag-summary{
@@ -138,8 +133,7 @@
 
   @media (max-width:720px){
     .cases,.brands{grid-template-columns:1fr;}
-    .stats{grid-template-columns:1fr;}
-    .about-card,.form-card{padding:26px 22px;}
+    .form-card{padding:26px 22px;}
   }
 </style>
 </head>
@@ -149,75 +143,47 @@
 
   <section class="hero">
     <span class="eyebrow">Meta Ads &middot; Instagram &amp; Facebook</span>
-    <h1>Voronkangizdagi teshikni<br><span class="thin">birga topamiz va yopamiz.</span></h1>
-    <p class="lead">Diagnostika raqamlaringizni ko'rsatdi. Endi ularni real biznes natijasiga aylantirish kerak &mdash; quyida men ishlagan loyihalar va aniq raqamlar bilan tanishing.</p>
+    <h1>Muammo byudjetda emas.<br><span class="thin">Voronkadagi teshikda.</span></h1>
+    <p class="lead">Men Humoyun Olimov &mdash; lid emas, <strong>sotuv</strong> keltiraman. Quyida real hisoblardan olingan raqamlar.</p>
     <a href="#lead" class="btn">Bepul diagnostikaga yozilish</a>
   </section>
 
   <div class="stats">
-    <div class="stat glass"><b>10+</b><span>yirik loyiha</span></div>
-    <div class="stat glass"><b>5x</b><span>gacha lid arzonlashishi</span></div>
-    <div class="stat glass"><b>90%+</b><span>o'rtacha lid sifati</span></div>
+    <div class="stat glass"><b>40+</b><span>loyiha</span></div>
+    <div class="stat glass"><b>5x</b><span>arzon lid</span></div>
+    <div class="stat glass"><b>70%+</b><span>lid sifati</span></div>
   </div>
-
-  <section class="section about">
-    <div class="section-head"><h2>Men haqimda</h2></div>
-    <div class="about-card glass">
-      <p>Men <strong>Humoyun Olimov</strong> &mdash; Meta Ads (Instagram va Facebook) bo'yicha targeting mutaxassisiman. Asosiy ishim shunchaki lid keltirish emas, balki <strong>sotuvga aylanadigan mijoz</strong> olib kelish.</p>
-      <p>Ko'p tadbirkorda muammo reklama byudjetida emas &mdash; voronkaning qaysidir bosqichida: noto'g'ri auditoriya, sifatsiz lid, yoki sekin javob berilayotgan sotuv jarayonida. Shuning uchun men har bir loyihani <strong>raqamlardan boshlayman</strong>: lid narxi, lid sifati, sotuv konversiyasi va mijoz narxi (CAC).</p>
-      <p>Quyida &mdash; turli sohalardagi mijozlarim bilan qo'lga kiritilgan haqiqiy ko'rsatkichlar.</p>
-    </div>
-  </section>
 
   <section class="section">
     <div class="section-head">
-      <h2>Keyslar va natijalar</h2>
-      <p>Har bir raqam real hisobdan olingan &mdash; onlayn ta'limdan tibbiyot va e-commerce'gacha.</p>
+      <h2>Keyslar</h2>
+      <p>Har bir raqam real reklama kabinetidan.</p>
     </div>
     <div class="cases">
 
       <div class="case glass">
         <div class="case-head">
-          <img src="https://humoyunolimov.vercel.app/avatars/dilfuza.jpg" alt="Dilfuza Akmalovna" loading="lazy">
+          <img src="https://humoyunolimov.vercel.app/logos/tarozi-klass.jpg" alt="Tarozi Klass" loading="lazy">
           <div>
-            <h3>"FASOHAT" notiqlik kursi</h3>
-            <div class="handle">@dilfuza_akmalovna</div>
+            <h3>Tarozi Klass</h3>
+            <div class="handle">B2B / B2G</div>
           </div>
         </div>
-        <p>Onlayn kurs sotuvlarini oshirish. Auditoriya qayta sozlandi va creative'lar yangilandi.</p>
-        <div class="case-stats">
-          <div><b>$0.36</b><span>Lid narxi</span></div>
-          <div><b>90%+</b><span>Lid sifati</span></div>
-        </div>
+        <p>$30,000&ndash;$200,000 lik sanoat tarozilari. Uzoq sotuv sikli, qimmat cheklar.</p>
       </div>
 
       <div class="case glass">
         <div class="case-head">
-          <img src="https://humoyunolimov.vercel.app/avatars/city-dental.jpg" alt="City Dental Clinic" loading="lazy">
+          <img src="https://humoyunolimov.vercel.app/avatars/piknic.jpg" alt="Piknic Uzbekistan" loading="lazy">
           <div>
-            <h3>City Dental Clinic</h3>
-            <div class="handle">@city_dental.uz</div>
+            <h3>Piknic Uzbekistan</h3>
+            <div class="handle">@piknic_uz</div>
           </div>
         </div>
-        <p>Mijozlar oqimini kengaytirish. Qimmat trafik to'xtatilib, byudjet ishlayotgan to'plamlarga yo'naltirildi.</p>
+        <p>Direct'dagi tartibsizlik o'rniga &mdash; forma orqali barqaror oqim.</p>
         <div class="case-stats">
-          <div><b>$2.37&rarr;$0.47</b><span>Lid narxi</span></div>
-          <div><b>~5x</b><span>Arzonlashish</span></div>
-        </div>
-      </div>
-
-      <div class="case glass">
-        <div class="case-head">
-          <img src="https://humoyunolimov.vercel.app/avatars/shuhrat-boymuradov.jpg" alt="Shuhrat Boymuradov" loading="lazy">
-          <div>
-            <h3>Shuhrat Boymuradov</h3>
-            <div class="handle">@shuhrat.boymuradov &mdash; plastik jarroh</div>
-          </div>
-        </div>
-        <p>Yuqori chekli xizmat uchun konsultatsiyaga yoziluvchilar oqimi qurildi.</p>
-        <div class="case-stats">
-          <div><b>$1+&rarr;$0.24</b><span>Lid narxi</span></div>
-          <div><b>2x</b><span>Konsultatsiya</span></div>
+          <div><b>$0.30</b><span>Forma lidi</span></div>
+          <div><b>151K</b><span>Obunachi</span></div>
         </div>
       </div>
 
@@ -229,7 +195,7 @@
             <div class="handle">@sobirsaid_</div>
           </div>
         </div>
-        <p>Avtomatlashtirilgan sotuv tizimi: reklamadan to yakuniy xaridgacha bo'lgan yo'l qurildi.</p>
+        <p>Reklamadan xaridgacha &mdash; to'liq avtomatlashtirilgan sotuv tizimi.</p>
         <div class="case-stats">
           <div><b>400+</b><span>Oylik sotuv</span></div>
           <div><b>643K</b><span>Obunachi</span></div>
@@ -238,51 +204,70 @@
 
       <div class="case glass">
         <div class="case-head">
-          <img src="https://humoyunolimov.vercel.app/avatars/piknic.jpg" alt="Piknic Uzbekistan" loading="lazy">
+          <img src="https://humoyunolimov.vercel.app/avatars/shuhrat-boymuradov.jpg" alt="Shuhrat Boymuradov" loading="lazy">
           <div>
-            <h3>Piknic Uzbekistan</h3>
-            <div class="handle">@piknic_uz</div>
+            <h3>Shuhrat Boymuradov</h3>
+            <div class="handle">Plastik jarroh</div>
           </div>
         </div>
-        <p>Sayt va forma orqali barqaror lid oqimi &mdash; direct'dagi tartibsizlik o'rniga.</p>
+        <p>Yuqori chekli xizmatga konsultatsiya oqimi qurildi.</p>
         <div class="case-stats">
-          <div><b>$0.30</b><span>Forma lidi</span></div>
-          <div><b>151K</b><span>Obunachi</span></div>
+          <div><b>$1+&rarr;$0.24</b><span>Lid narxi</span></div>
+          <div><b>2x</b><span>Konsultatsiya</span></div>
         </div>
       </div>
 
       <div class="case glass">
         <div class="case-head">
-          <img src="https://humoyunolimov.vercel.app/logos/tarozi-klass.jpg" alt="Tarozi Klass" loading="lazy">
+          <img src="https://humoyunolimov.vercel.app/avatars/city-dental.jpg" alt="City Dental Clinic" loading="lazy">
           <div>
-            <h3>Tarozi Klass</h3>
-            <div class="handle">B2B / B2G segmenti</div>
+            <h3>City Dental Clinic</h3>
+            <div class="handle">@city_dental.uz</div>
           </div>
         </div>
-        <p>Narxi $30,000 dan $200,000 gacha bo'lgan tonnajli sanoat tarozilari &mdash; uzoq sotuv sikli bilan ishlash.</p>
+        <p>Qimmat trafik o'chirildi, byudjet ishlayotgan to'plamlarga ketdi.</p>
+        <div class="case-stats">
+          <div><b>$2.37&rarr;$0.47</b><span>Lid narxi</span></div>
+          <div><b>~5x</b><span>Arzonlashish</span></div>
+        </div>
+      </div>
+
+      <div class="case glass">
+        <div class="case-head">
+          <img src="https://humoyunolimov.vercel.app/avatars/dilfuza.jpg" alt="Dilfuza Akmalovna" loading="lazy">
+          <div>
+            <h3>"FASOHAT" notiqlik kursi</h3>
+            <div class="handle">@dilfuza_akmalovna</div>
+          </div>
+        </div>
+        <p>Auditoriya qayta sozlandi, creative'lar yangilandi.</p>
+        <div class="case-stats">
+          <div><b>$0.36</b><span>Lid narxi</span></div>
+          <div><b>90%+</b><span>Lid sifati</span></div>
+        </div>
       </div>
 
     </div>
   </section>
 
   <section class="section">
-    <div class="section-head"><h2>Hamkorlik qilingan brendlar</h2></div>
+    <div class="section-head"><h2>Ishlagan brendlarim</h2></div>
     <div class="brands">
       <div class="brand glass">
         <img src="https://humoyunolimov.vercel.app/logos/zin-nur.jpg" alt="Zin-Nur Online" loading="lazy">
-        <div><h4>Zin-Nur Online</h4><p>Arab tilini o'rgatuvchi onlayn ta'lim akademiyasi.</p></div>
+        <div><h4>Zin-Nur Online</h4><p>Arab tili akademiyasi</p></div>
       </div>
       <div class="brand glass">
         <img src="https://humoyunolimov.vercel.app/logos/fenix-academy.jpg" alt="Fenix Academy" loading="lazy">
-        <div><h4>Fenix Academy</h4><p>Robototexnika, IT va sun'iy intellekt yo'nalishlarida o'quv markazi.</p></div>
+        <div><h4>Fenix Academy</h4><p>Robototexnika va IT markazi</p></div>
       </div>
       <div class="brand glass">
         <img src="https://humoyunolimov.vercel.app/logos/brigada-s.jpg" alt="Brigada-S" loading="lazy">
-        <div><h4>Brigada-S</h4><p>Turar-joylarga "podklyuch" ta'mirlash xizmatlari.</p></div>
+        <div><h4>Brigada-S</h4><p>"Podklyuch" ta'mirlash</p></div>
       </div>
       <div class="brand glass">
         <img src="https://humoyunolimov.vercel.app/logos/demiks.jpg" alt="Demiks Premium" loading="lazy">
-        <div><h4>Demiks Premium</h4><p>Kiyim do'konlari uchun ulgurji kiyim yetkazib beruvchi brend.</p></div>
+        <div><h4>Demiks Premium</h4><p>Ulgurji kiyim brendi</p></div>
       </div>
     </div>
   </section>
@@ -290,7 +275,7 @@
   <section class="section" id="lead">
     <div class="form-card glass">
       <h2>Bepul diagnostikaga yozilish</h2>
-      <p class="sub">Raqamlaringizni birga ko'rib chiqamiz va voronkangizdagi asosiy muammoni aniqlaymiz. 24 soat ichida bog'lanaman.</p>
+      <p class="sub">Raqamlaringizni birga ko'rib chiqamiz. <strong>1 soat ichida bog'lanaman.</strong></p>
 
       <div class="diag-summary" id="diagSummary">
         <h4>Sizning diagnostika natijangiz</h4>
@@ -369,7 +354,7 @@
       if (!res.ok) throw new Error('failed');
       form.style.display = 'none';
       msg.className = 'ok'; msg.style.display = 'block';
-      msg.textContent = "Rahmat! Ma'lumotlaringiz qabul qilindi, 24 soat ichida bog'lanaman.";
+      msg.textContent = "Rahmat! Ma'lumotlaringiz qabul qilindi, 1 soat ichida bog'lanaman.";
     }catch(err){
       msg.className = 'err'; msg.style.display = 'block';
       msg.textContent = "Xatolik yuz berdi. Iltimos, birozdan so'ng qayta urinib ko'ring.";
