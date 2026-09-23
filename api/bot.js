@@ -1,7 +1,11 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { waitUntil } from '@vercel/functions';
+
+export const maxDuration = 300;
 
 const VIDEO_URL = 'https://www.youtube.com/watch?v=4rF2qfdhMOg';
 const SITE_URL = 'https://reklama-diagnostika.vercel.app';
+const FOLLOWUP_MS = 3 * 60 * 1000;
 
 // ponytail: chegara qiymatlari index.html bilan bir xil - birini o'zgartirsangiz, ikkinchisini ham o'zgartiring
 function diagnose(budget, leads, quality, conversion, price) {
@@ -61,10 +65,7 @@ function diagnose(budget, leads, quality, conversion, price) {
     'Byudjetni asta-sekin (haftasiga 15-20%) oshirib, natija barqarorligini kuzating.',
   ]]);
 
-  return {
-    cpl, cac, revenue, profit, roas, sales,
-    qualityLeads, title, body, recos,
-  };
+  return { cpl, cac, revenue, profit, roas, sales, qualityLeads, title, body, recos };
 }
 
 const money = (n) => '$' + Math.round(n).toLocaleString('en-US');
@@ -112,7 +113,6 @@ async function buildPdf(input, d) {
 
   write('Reklama diagnostikasi', { size: 24, f: bold, gap: 8 });
   write('Voronkangiz bo\'yicha to\'liq xulosa va tavsiyalar', { size: 11, color: muted, gap: 4 });
-  if (input.niche) write('Soha: ' + input.niche, { size: 11, color: muted, gap: 4 });
 
   space(22);
   write('Sizning raqamlaringiz', { size: 14, f: bold, gap: 6 });
@@ -147,10 +147,6 @@ async function buildPdf(input, d) {
     for (const item of items) write('- ' + item, { size: 11, color: ink, gap: 5 });
   }
 
-  space(30);
-  write('Humoyun Olimov - Meta Ads targeting mutaxassisi', { size: 10, color: muted, gap: 3 });
-  write(SITE_URL, { size: 10, color: muted, gap: 3 });
-
   return pdf.save();
 }
 
@@ -160,6 +156,43 @@ const tg = (token, method, body) =>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
+
+// Upstash/Vercel KV REST. Env o'zgaruvchilar bo'lmasa - jim o'tkazib yuboradi.
+const kvUrl = () => process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const kvToken = () => process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+
+async function kv(cmd) {
+  const url = kvUrl(), token = kvToken();
+  if (!url || !token) return null;
+  try {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(cmd),
+    });
+    const j = await r.json();
+    return j.result;
+  } catch (e) {
+    return null;
+  }
+}
+
+const saveSubscriber = (chatId, from) =>
+  kv(['HSET', 'subs', String(chatId), JSON.stringify({
+    name: [from?.first_name, from?.last_name].filter(Boolean).join(' '),
+    username: from?.username || '',
+    at: new Date().toISOString(),
+  })]);
+
+function vslMessage(chatId) {
+  return {
+    chat_id: chatId,
+    text: "Xulosangizni ko'rib chiqdingizmi?\n\nEndi eng muhimi - o'sha kamchiliklarni qanday tuzatish. Men 5 daqiqalik maxsus video tayyorladim: reklama samaradorligini oshirish va voronkadagi teshiklarni yopish bo'yicha aniq qadamlar.\n\nPastdagi tugmani bosing:",
+    reply_markup: {
+      inline_keyboard: [[{ text: "Videoni ko'rish", url: VIDEO_URL }]],
+    },
+  };
+}
 
 export default async function handler(req, res) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -200,12 +233,42 @@ export default async function handler(req, res) {
     return;
   }
   const chatId = msg.chat.id;
+  const admin = process.env.ADMIN_CHAT_ID;
+
+  // O'z chat ID'ingizni bilish uchun
+  if (text.trim() === '/id') {
+    await tg(token, 'sendMessage', { chat_id: chatId, text: `Sizning chat ID: ${chatId}` });
+    res.status(200).json({ ok: true });
+    return;
+  }
+
+  // Rassilka (faqat admin): /send Xabar matni
+  if (text.startsWith('/send ') && admin && String(chatId) === String(admin)) {
+    const body = text.slice(6).trim();
+    const ids = (await kv(['HKEYS', 'subs'])) || [];
+    waitUntil((async () => {
+      let sent = 0;
+      for (const id of ids) {
+        const r = await tg(token, 'sendMessage', { chat_id: id, text: body }).then((x) => x.json()).catch(() => ({}));
+        if (r && r.ok) sent++;
+        await new Promise((r2) => setTimeout(r2, 40)); // ponytail: ~25 msg/s, Telegram limiti 30
+      }
+      await tg(token, 'sendMessage', { chat_id: chatId, text: `Rassilka tugadi: ${sent}/${ids.length} ta yuborildi.` });
+    })());
+    res.status(200).json({ ok: true });
+    return;
+  }
+
+  await saveSubscriber(chatId, msg.from);
 
   const payload = (text.match(/^\/start\s+([\d-]+)$/) || [])[1];
   if (!payload) {
+    const extra = admin && String(chatId) === String(admin)
+      ? "\n\nAdmin: rassilka uchun /send <matn>"
+      : '';
     await tg(token, 'sendMessage', {
       chat_id: chatId,
-      text: `Salom! Men reklama voronkangiz bo'yicha PDF xulosa tayyorlayman.\n\nBuning uchun avval diagnostikadan o'ting:\n${SITE_URL}\n\nNatija sahifasida "PDF xulosani olish" tugmasini bosing.`,
+      text: `Salom! Men reklama voronkangiz bo'yicha PDF xulosa tayyorlayman.\n\nBuning uchun avval diagnostikadan o'ting:\n${SITE_URL}\n\nNatija sahifasida "PDF xulosani olish" tugmasini bosing.${extra}`,
     });
     res.status(200).json({ ok: true });
     return;
@@ -231,11 +294,11 @@ export default async function handler(req, res) {
     fd.append('document', new Blob([bytes], { type: 'application/pdf' }), 'reklama-diagnostikasi.pdf');
     await fetch(`https://api.telegram.org/bot${token}/sendDocument`, { method: 'POST', body: fd });
 
-    await tg(token, 'sendMessage', {
-      chat_id: chatId,
-      text: `Bonus: reklama samaradorligini oshirish bo'yicha 5 daqiqalik maxsus video\n${VIDEO_URL}`,
-      disable_web_page_preview: false,
-    });
+    // 3 daqiqadan keyin VSL post + tugma (javob Telegram'ga darhol qaytadi)
+    waitUntil((async () => {
+      await new Promise((r) => setTimeout(r, FOLLOWUP_MS));
+      await tg(token, 'sendMessage', vslMessage(chatId));
+    })());
   } catch (err) {
     await tg(token, 'sendMessage', {
       chat_id: chatId,
