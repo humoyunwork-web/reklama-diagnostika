@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { name, phone, diag } = req.body || {};
+  const { name, phone, telegram, diag } = req.body || {};
 
   if (!name || !phone || String(name).length > 200 || String(phone).length > 50) {
     res.status(400).json({ error: 'Invalid input' });
@@ -27,6 +27,7 @@ export default async function handler(req, res) {
     'Yangi lid (diagnostika):',
     `Ism: ${name}`,
     `Telefon: ${phone}`,
+    telegram ? `Telegram: ${String(telegram).slice(0, 100)}` : null,
     d.niche ? `Soha: ${String(d.niche).slice(0, 200)}` : null,
     '',
     d.budget ? `Byudjet: $${d.budget}/oy` : null,
