@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@vercel/functions": "^2.0.0",
     "pdf-lib": "^1.17.1"
   }
 }
