@@ -317,37 +317,6 @@ export default async function handler(req, res) {
     fd.append('document', new Blob([bytes], { type: 'application/pdf' }), 'reklama-diagnostikasi.pdf');
     await fetch(`https://api.telegram.org/bot${token}/sendDocument`, { method: 'POST', body: fd });
 
-    // Guruhga xabar: kim PDF oldi va uning raqamlari
-    const leadChat = await getLeadChat();
-    if (leadChat) {
-      const who = [
-        [msg.from?.first_name, msg.from?.last_name].filter(Boolean).join(' '),
-        msg.from?.username ? `@${msg.from.username}` : '',
-      ].filter(Boolean).join(' ');
-      await tg(token, 'sendMessage', {
-        chat_id: leadChat,
-        message_thread_id: (await kv(['GET', 'leadthread'])) || process.env.TELEGRAM_THREAD_ID || undefined,
-        text: [
-          'Botdan PDF olindi:',
-          who || `ID ${chatId}`,
-          '',
-          `Byudjet: ${budget}/oy`,
-          `Lidlar: ${leads} ta/oy`,
-          `Lid sifati: ${quality}%`,
-          `Sotuv konversiyasi: ${conversion}%`,
-          `Mahsulot narxi: ${price}`,
-          '',
-          `Lid narxi (CPL): ${money(d.cpl)}`,
-          `Mijoz narxi (CAC): ${d.cac ? money(d.cac) : "hisoblab bo'lmadi"}`,
-          `Oylik daromad: ${money(d.revenue)}`,
-          `Sof foyda / zarar: ${d.profit >= 0 ? '+' : '-'}${money(Math.abs(d.profit))}`,
-          `ROAS: ${d.roas.toFixed(1)}x`,
-          '',
-          `Xulosa: ${d.title}`,
-        ].join('\n'),
-      });
-    }
-
     // 3 daqiqadan keyin VSL post + tugma (javob Telegram'ga darhol qaytadi)
     waitUntil((async () => {
       await new Promise((r) => setTimeout(r, FOLLOWUP_MS));
