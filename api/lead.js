@@ -1,3 +1,5 @@
+import { kv, getLeadChat } from './_kv.js';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
@@ -12,8 +14,8 @@ export default async function handler(req, res) {
   }
 
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  const threadId = process.env.TELEGRAM_THREAD_ID;
+  const chatId = await getLeadChat();
+  const threadId = (await kv(['GET', 'leadthread'])) || process.env.TELEGRAM_THREAD_ID;
 
   if (!token || !chatId) {
     res.status(500).json({ error: 'Server not configured' });

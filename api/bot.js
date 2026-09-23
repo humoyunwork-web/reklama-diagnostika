@@ -1,5 +1,6 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { waitUntil } from '@vercel/functions';
+import { kv, getLeadChat } from './_kv.js';
 
 export const maxDuration = 300;
 
@@ -157,26 +158,6 @@ const tg = (token, method, body) =>
     body: JSON.stringify(body),
   });
 
-// Upstash/Vercel KV REST. Env o'zgaruvchilar bo'lmasa - jim o'tkazib yuboradi.
-const kvUrl = () => process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const kvToken = () => process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-
-async function kv(cmd) {
-  const url = kvUrl(), token = kvToken();
-  if (!url || !token) return null;
-  try {
-    const r = await fetch(url, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(cmd),
-    });
-    const j = await r.json();
-    return j.result;
-  } catch (e) {
-    return null;
-  }
-}
-
 const saveSubscriber = (chatId, from) =>
   kv(['HSET', 'subs', String(chatId), JSON.stringify({
     name: [from?.first_name, from?.last_name].filter(Boolean).join(' '),
@@ -235,15 +216,30 @@ export default async function handler(req, res) {
   const chatId = msg.chat.id;
   const admin = process.env.ADMIN_CHAT_ID;
 
-  // O'z chat ID'ingizni bilish uchun
-  if (text.trim() === '/id') {
-    await tg(token, 'sendMessage', { chat_id: chatId, text: `Sizning chat ID: ${chatId}` });
+  const isGroup = msg.chat.type === 'group' || msg.chat.type === 'supergroup';
+
+  // Guruhda /id - o'sha guruhni lidlar tushadigan joy qilib belgilaydi
+  if (text.trim().split('@')[0] === '/id') {
+    if (isGroup) {
+      await kv(['SET', 'leadchat', String(chatId)]);
+      if (msg.message_thread_id) await kv(['SET', 'leadthread', String(msg.message_thread_id)]);
+    }
+    await tg(token, 'sendMessage', {
+      chat_id: chatId,
+      message_thread_id: msg.message_thread_id,
+      text: isGroup
+        ? `Tayyor. Lidlar shu yerga tushadi.\nChat ID: ${chatId}`
+        : `Sizning chat ID: ${chatId}`,
+    });
     res.status(200).json({ ok: true });
     return;
   }
 
-  // Rassilka (faqat admin): /send Xabar matni
-  if (text.startsWith('/send ') && admin && String(chatId) === String(admin)) {
+  // Rassilka: admin shaxsiy chatda yoki lidlar guruhida /send Xabar matni
+  const canBroadcast =
+    (admin && String(chatId) === String(admin)) ||
+    (isGroup && String(chatId) === String(await getLeadChat()));
+  if (text.startsWith('/send ') && canBroadcast) {
     const body = text.slice(6).trim();
     const ids = (await kv(['HKEYS', 'subs'])) || [];
     waitUntil((async () => {
@@ -255,6 +251,11 @@ export default async function handler(req, res) {
       }
       await tg(token, 'sendMessage', { chat_id: chatId, text: `Rassilka tugadi: ${sent}/${ids.length} ta yuborildi.` });
     })());
+    res.status(200).json({ ok: true });
+    return;
+  }
+
+  if (isGroup) {
     res.status(200).json({ ok: true });
     return;
   }
