@@ -207,7 +207,8 @@ export default async function handler(req, res) {
     return;
   }
 
-  const msg = req.body && req.body.message;
+  // kanal postlari boshqa maydonda keladi
+  const msg = req.body && (req.body.message || req.body.channel_post);
   const text = msg && msg.text;
   if (!text) {
     res.status(200).json({ ok: true });
@@ -216,19 +217,20 @@ export default async function handler(req, res) {
   const chatId = msg.chat.id;
   const admin = process.env.ADMIN_CHAT_ID;
 
-  const isGroup = msg.chat.type === 'group' || msg.chat.type === 'supergroup';
+  const isGroup = msg.chat.type !== 'private';
 
   // Guruhda /id - o'sha guruhni lidlar tushadigan joy qilib belgilaydi
   if (text.trim().split('@')[0] === '/id') {
+    let saved = null;
     if (isGroup) {
-      await kv(['SET', 'leadchat', String(chatId)]);
+      saved = await kv(['SET', 'leadchat', String(chatId)]);
       if (msg.message_thread_id) await kv(['SET', 'leadthread', String(msg.message_thread_id)]);
     }
     await tg(token, 'sendMessage', {
       chat_id: chatId,
       message_thread_id: msg.message_thread_id,
       text: isGroup
-        ? `Tayyor. Lidlar shu yerga tushadi.\nChat ID: ${chatId}`
+        ? `${saved ? 'Tayyor. Lidlar shu yerga tushadi.' : 'Saqlab boʻlmadi (baza ulanmagan).'}\nChat ID: ${chatId}`
         : `Sizning chat ID: ${chatId}`,
     });
     res.status(200).json({ ok: true });
