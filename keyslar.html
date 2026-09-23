@@ -99,7 +99,7 @@
   .brand h4{font-size:15px;font-weight:700;margin-bottom:2px;}
   .brand p{font-size:13px;color:var(--text-muted);line-height:1.45;}
 
-  .steps{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
   .step-item{padding:20px 22px;display:flex;gap:14px;align-items:flex-start;}
   .step-item .n{
     flex:none;width:30px;height:30px;border-radius:50%;
@@ -128,6 +128,7 @@
   .diag-summary li b{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums;}
   .field{margin-bottom:16px;}
   .field label{display:block;font-size:13.5px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;}
+  .field label .opt{color:var(--text-muted);font-weight:500;}
   .field input{
     width:100%;padding:15px 16px;border-radius:13px;
     background:var(--glass-bg);border:1px solid var(--glass-border-strong);
@@ -168,6 +169,34 @@
     <div class="stat glass"><b>5x</b><span>arzon lid</span></div>
     <div class="stat glass"><b>4 yil</b><span>tajriba</span></div>
   </div>
+
+  <section class="section">
+    <div class="section-head"><h2>Diagnostikada nimalar bo'ladi</h2></div>
+    <div class="steps">
+      <div class="step-item glass">
+        <span class="n">1</span>
+        <div>
+          <h4>Raqamlarni ochamiz</h4>
+          <p>Byudjet, lid narxi, lid sifati, sotuv konversiyasi va mijoz narxi (CAC) &mdash; hammasi bitta jadvalda.</p>
+        </div>
+      </div>
+      <div class="step-item glass">
+        <span class="n">2</span>
+        <div>
+          <h4>Teshikni topamiz</h4>
+          <p>Pul aynan qaysi bosqichda yo'qolayotganini ko'rsataman: reklamadami, lid sifatidami yoki sotuvdami.</p>
+        </div>
+      </div>
+      <div class="step-item glass">
+        <span class="n">3</span>
+        <div>
+          <h4>30 kunlik reja</h4>
+          <p>Nimani o'chirish, nimani sinash, byudjetni qayerga yo'naltirish &mdash; aniq qadamlar bilan.</p>
+        </div>
+      </div>
+    </div>
+    <div class="steps-note">20&ndash;30 daqiqa &middot; Telegram yoki qo'ng'iroq orqali &middot; Mutlaqo bepul</div>
+  </section>
 
   <section class="section">
     <div class="section-head">
@@ -286,41 +315,6 @@
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-head"><h2>Diagnostikada nimalar bo'ladi</h2></div>
-    <div class="steps">
-      <div class="step-item glass">
-        <span class="n">1</span>
-        <div>
-          <h4>Raqamlarni ochamiz</h4>
-          <p>Byudjet, lid narxi, lid sifati, sotuv konversiyasi va mijoz narxi (CAC) &mdash; hammasi bitta jadvalda.</p>
-        </div>
-      </div>
-      <div class="step-item glass">
-        <span class="n">2</span>
-        <div>
-          <h4>Teshikni topamiz</h4>
-          <p>Pul aynan qaysi bosqichda yo'qolayotganini ko'rsataman: reklamadami, lid sifatidami yoki sotuvdami.</p>
-        </div>
-      </div>
-      <div class="step-item glass">
-        <span class="n">3</span>
-        <div>
-          <h4>30 kunlik reja</h4>
-          <p>Nimani o'chirish, nimani sinash, byudjetni qayerga yo'naltirish &mdash; aniq qadamlar bilan.</p>
-        </div>
-      </div>
-      <div class="step-item glass">
-        <span class="n">4</span>
-        <div>
-          <h4>Qarorni siz qabul qilasiz</h4>
-          <p>Rejani o'zingiz bajarasizmi yoki birga ishlaymizmi &mdash; o'zingiz hal qilasiz. Majburiyat yo'q.</p>
-        </div>
-      </div>
-    </div>
-    <div class="steps-note">20&ndash;30 daqiqa &middot; Telegram yoki qo'ng'iroq orqali &middot; Mutlaqo bepul</div>
-  </section>
-
   <section class="section" id="lead">
     <div class="form-card glass">
       <h2>Bepul diagnostikaga yozilish</h2>
@@ -339,6 +333,10 @@
         <div class="field">
           <label for="phone">Telefon raqam</label>
           <input id="phone" type="tel" placeholder="+998 90 123 45 67" required>
+        </div>
+        <div class="field">
+          <label for="telegram">Telegram username <span class="opt">(ixtiyoriy)</span></label>
+          <input id="telegram" type="text" placeholder="@username" autocapitalize="off" autocorrect="off">
         </div>
         <button type="submit" class="btn" id="submitBtn">Yuborish</button>
       </form>
@@ -386,6 +384,7 @@
     e.preventDefault();
     var name = document.getElementById('name').value.trim();
     var phone = document.getElementById('phone').value.trim();
+    var telegram = document.getElementById('telegram').value.trim();
 
     if (phone.replace(/\D/g,'').length < 9){
       msg.className = 'err'; msg.style.display = 'block';
@@ -398,7 +397,7 @@
       var res = await fetch('/api/lead', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ name: name, phone: phone, diag: diag })
+        body: JSON.stringify({ name: name, phone: phone, telegram: telegram, diag: diag })
       });
       if (!res.ok) throw new Error('failed');
       form.style.display = 'none';
