@@ -99,6 +99,22 @@
   .brand h4{font-size:15px;font-weight:700;margin-bottom:2px;}
   .brand p{font-size:13px;color:var(--text-muted);line-height:1.45;}
 
+  .steps{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .step-item{padding:20px 22px;display:flex;gap:14px;align-items:flex-start;}
+  .step-item .n{
+    flex:none;width:30px;height:30px;border-radius:50%;
+    background:var(--coral-soft);border:1px solid var(--coral-border);color:var(--coral);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:800;
+  }
+  .step-item h4{font-size:15.5px;font-weight:700;margin-bottom:5px;letter-spacing:-.01em;}
+  .step-item p{font-size:13.5px;color:var(--text-secondary);line-height:1.55;}
+  .steps-note{
+    margin-top:12px;padding:14px 18px;border-radius:14px;
+    background:var(--coral-soft);border:1px solid var(--coral-border);
+    font-size:14px;color:var(--text);font-weight:600;text-align:center;
+  }
+
   .form-card{max-width:540px;margin:0 auto;padding:32px 28px;}
   .form-card h2{font-size:clamp(22px,3.2vw,28px);font-weight:800;letter-spacing:-.02em;text-align:center;text-wrap:balance;}
   .form-card p.sub{color:var(--text-secondary);font-size:14.5px;text-align:center;margin:12px auto 26px;max-width:420px;}
@@ -132,7 +148,7 @@
   footer a:hover{color:var(--text);}
 
   @media (max-width:720px){
-    .cases,.brands{grid-template-columns:1fr;}
+    .cases,.brands,.steps{grid-template-columns:1fr;}
     .form-card{padding:26px 22px;}
   }
 </style>
@@ -144,20 +160,18 @@
   <section class="hero">
     <span class="eyebrow">Meta Ads &middot; Instagram &amp; Facebook</span>
     <h1>Muammo byudjetda emas.<br><span class="thin">Voronkadagi teshikda.</span></h1>
-    <p class="lead">Men Humoyun Olimov &mdash; lid emas, <strong>sotuv</strong> keltiraman. Quyida real hisoblardan olingan raqamlar.</p>
     <a href="#lead" class="btn">Bepul diagnostikaga yozilish</a>
   </section>
 
   <div class="stats">
     <div class="stat glass"><b>40+</b><span>loyiha</span></div>
     <div class="stat glass"><b>5x</b><span>arzon lid</span></div>
-    <div class="stat glass"><b>70%+</b><span>lid sifati</span></div>
+    <div class="stat glass"><b>4 yil</b><span>tajriba</span></div>
   </div>
 
   <section class="section">
     <div class="section-head">
       <h2>Keyslar</h2>
-      <p>Har bir raqam real reklama kabinetidan.</p>
     </div>
     <div class="cases">
 
@@ -270,6 +284,41 @@
         <div><h4>Demiks Premium</h4><p>Ulgurji kiyim brendi</p></div>
       </div>
     </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Diagnostikada nimalar bo'ladi</h2></div>
+    <div class="steps">
+      <div class="step-item glass">
+        <span class="n">1</span>
+        <div>
+          <h4>Raqamlarni ochamiz</h4>
+          <p>Byudjet, lid narxi, lid sifati, sotuv konversiyasi va mijoz narxi (CAC) &mdash; hammasi bitta jadvalda.</p>
+        </div>
+      </div>
+      <div class="step-item glass">
+        <span class="n">2</span>
+        <div>
+          <h4>Teshikni topamiz</h4>
+          <p>Pul aynan qaysi bosqichda yo'qolayotganini ko'rsataman: reklamadami, lid sifatidami yoki sotuvdami.</p>
+        </div>
+      </div>
+      <div class="step-item glass">
+        <span class="n">3</span>
+        <div>
+          <h4>30 kunlik reja</h4>
+          <p>Nimani o'chirish, nimani sinash, byudjetni qayerga yo'naltirish &mdash; aniq qadamlar bilan.</p>
+        </div>
+      </div>
+      <div class="step-item glass">
+        <span class="n">4</span>
+        <div>
+          <h4>Qarorni siz qabul qilasiz</h4>
+          <p>Rejani o'zingiz bajarasizmi yoki birga ishlaymizmi &mdash; o'zingiz hal qilasiz. Majburiyat yo'q.</p>
+        </div>
+      </div>
+    </div>
+    <div class="steps-note">20&ndash;30 daqiqa &middot; Telegram yoki qo'ng'iroq orqali &middot; Mutlaqo bepul</div>
   </section>
 
   <section class="section" id="lead">
