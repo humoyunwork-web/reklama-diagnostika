@@ -16,6 +16,6 @@ export async function kv(cmd) {
   }
 }
 
-// Lidlar tushadigan guruh: bot guruhga qo'shilib /id yozilganda saqlanadi.
-export const getLeadChat = async () =>
-  (await kv(['GET', 'leadchat'])) || process.env.TELEGRAM_CHAT_ID || null;
+// Lidlar tushadigan guruh faqat env'dan olinadi - bot orqali o'zgartirib bo'lmaydi.
+export const LEAD_CHAT = () => process.env.TELEGRAM_CHAT_ID || null;
+export const LEAD_THREAD = () => process.env.TELEGRAM_THREAD_ID || null;

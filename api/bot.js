@@ -1,6 +1,6 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { waitUntil } from '@vercel/functions';
-import { kv, getLeadChat } from './_kv.js';
+import { kv, LEAD_CHAT } from './_kv.js';
 
 export const maxDuration = 300;
 
@@ -10,7 +10,7 @@ const FOLLOWUP_MS = 3 * 60 * 1000;
 
 // ponytail: chegara qiymatlari index.html bilan bir xil - birini o'zgartirsangiz, ikkinchisini ham o'zgartiring
 function diagnose(budget, leads, quality, conversion, price) {
-  const cpl = budget / leads;
+  const cpl = leads > 0 ? budget / leads : 0;
   const qualityLeads = leads * quality / 100;
   const sales = qualityLeads * conversion / 100;
   const cac = sales > 0 ? budget / sales : null;
@@ -175,60 +175,80 @@ function vslMessage(chatId) {
   };
 }
 
+// ZREM 1 qaytarsa - shu chat bizniki, ikki marta yuborilmaydi.
+const claimVsl = async (chatId) => {
+  if (!process.env.KV_REST_API_URL && !process.env.UPSTASH_REDIS_REST_URL) return true;
+  return (await kv(['ZREM', 'vsl', String(chatId)])) === 1;
+};
+
+async function flushDueVsl(token) {
+  const due = (await kv(['ZRANGEBYSCORE', 'vsl', 0, Date.now()])) || [];
+  for (const id of due) {
+    if (await claimVsl(id)) await tg(token, 'sendMessage', vslMessage(id));
+  }
+}
+
+// 300 s chegarasiga yetganda to'xtaydi va qolganini bazaga yozadi (/davom davom ettiradi)
+async function broadcast(token, adminChat, body, ids) {
+  const deadline = Date.now() + 240000;
+  let sent = 0, i = 0;
+  for (; i < ids.length; i++) {
+    if (Date.now() > deadline) break;
+    const r = await tg(token, 'sendMessage', { chat_id: ids[i], text: body })
+      .then((x) => x.json())
+      .catch(() => ({}));
+    if (r && r.ok) sent++;
+    await new Promise((r2) => setTimeout(r2, 40)); // ponytail: ~25 msg/s, Telegram limiti 30
+  }
+  const rest = ids.slice(i);
+  await kv(['SET', 'sendrest', JSON.stringify(rest)]);
+  await tg(token, 'sendMessage', {
+    chat_id: adminChat,
+    text: rest.length
+      ? `${sent} ta yuborildi, ${rest.length} ta qoldi. Davom ettirish uchun: /davom`
+      : `Rassilka tugadi: ${sent} ta yuborildi.`,
+  });
+}
+
 export default async function handler(req, res) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
+  const secret = process.env.WEBHOOK_SECRET;
   if (!token) {
     res.status(500).json({ error: 'Server not configured' });
     return;
   }
 
   if (req.method === 'GET') {
-    // Bir martalik sozlash: /api/bot?setup=1 ni brauzerda oching
-    if (req.query.setup) {
-      const url = `https://${req.headers.host}/api/bot`;
-      const r = await fetch(
-        `https://api.telegram.org/bot${token}/setWebhook?url=${encodeURIComponent(url)}`
-      ).then((r) => r.json());
+    // Bir martalik sozlash: GET /api/bot  +  x-setup-key: <WEBHOOK_SECRET>
+    if (secret && req.headers['x-setup-key'] === secret) {
+      const url = `${SITE_URL}/api/bot`;
+      const r = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url,
+          secret_token: secret,
+          allowed_updates: ['message'],
+          drop_pending_updates: true,
+        }),
+      }).then((r) => r.json());
       res.status(200).json({ webhook: url, telegram: r });
       return;
-    }
-    // Baza tekshiruvi: /api/bot?kv=1
-    if (req.query.kv) {
-      res.status(200).json({ ping: await kv(['PING']), hasLeadChat: !!(await kv(['GET', 'leadchat'])), subs: (await kv(['HLEN', 'subs'])) });
-      return;
-    }
-    // Tekshiruv: /api/bot?pdf=2000-150-60-25-80 - PDF'ni brauzerda ko'rish
-    if (req.query.pdf) {
-      const [b, l, q, c, p] = String(req.query.pdf).split('-').map(Number);
-      const bytes = await buildPdf(
-        { budget: b, leads: l, quality: q, conversion: c, price: p },
-        diagnose(b, l, q, c, p)
-      );
-      res.setHeader('Content-Type', 'application/pdf');
-      res.send(Buffer.from(bytes));
-      return;
-    }
-    res.status(200).json({ ok: true, usage: '?setup=1 | ?pdf=byudjet-lidlar-sifat-konversiya-narx' });
-    return;
-  }
-
-  // Bot guruhga qo'shilganda yoki admin qilinganda - o'sha chatni avtomat eslab qoladi
-  const mcm = req.body && (req.body.my_chat_member || req.body.chat_member);
-  if (mcm && mcm.chat && mcm.chat.type !== 'private') {
-    const st = mcm.new_chat_member && mcm.new_chat_member.status;
-    if (st === 'member' || st === 'administrator') {
-      const ok = await kv(['SET', 'leadchat', String(mcm.chat.id)]);
-      await tg(token, 'sendMessage', {
-        chat_id: mcm.chat.id,
-        text: ok ? 'Tayyor. Lidlar shu yerga tushadi.' : 'Baza ulanmagan - lidlar saqlanmaydi.',
-      });
     }
     res.status(200).json({ ok: true });
     return;
   }
 
-  // kanal postlari boshqa maydonda keladi
-  const msg = req.body && (req.body.message || req.body.channel_post);
+  // Faqat Telegram yubora oladi: maxfiy kalit tekshiruvi
+  if (!secret || req.headers['x-telegram-bot-api-secret-token'] !== secret) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  // Kechikkan video postlarini yuborib yuboramiz (deploy paytida uzilib qolganlari)
+  waitUntil(flushDueVsl(token));
+
+  const msg = req.body && req.body.message;
   const text = msg && msg.text;
   if (!text) {
     res.status(200).json({ ok: true });
@@ -239,40 +259,35 @@ export default async function handler(req, res) {
 
   const isGroup = msg.chat.type !== 'private';
 
-  // Guruhda /id - o'sha guruhni lidlar tushadigan joy qilib belgilaydi
+  // Chat ID'ni ko'rsatadi (hech narsani o'zgartirmaydi)
   if (text.trim().split('@')[0] === '/id') {
-    let saved = null;
-    if (isGroup) {
-      saved = await kv(['SET', 'leadchat', String(chatId)]);
-      if (msg.message_thread_id) await kv(['SET', 'leadthread', String(msg.message_thread_id)]);
-    }
     await tg(token, 'sendMessage', {
       chat_id: chatId,
       message_thread_id: msg.message_thread_id,
-      text: isGroup
-        ? `${saved ? 'Tayyor. Lidlar shu yerga tushadi.' : 'Saqlab boʻlmadi (baza ulanmagan).'}\nChat ID: ${chatId}`
-        : `Sizning chat ID: ${chatId}`,
+      text: `Chat ID: ${chatId}`,
     });
     res.status(200).json({ ok: true });
     return;
   }
 
-  // Rassilka: admin shaxsiy chatda yoki lidlar guruhida /send Xabar matni
+  // Rassilka: admin shaxsiy chatda yoki lidlar guruhida
   const canBroadcast =
     (admin && String(chatId) === String(admin)) ||
-    (isGroup && String(chatId) === String(await getLeadChat()));
-  if (text.startsWith('/send ') && canBroadcast) {
-    const body = text.slice(6).trim();
-    const ids = (await kv(['HKEYS', 'subs'])) || [];
-    waitUntil((async () => {
-      let sent = 0;
-      for (const id of ids) {
-        const r = await tg(token, 'sendMessage', { chat_id: id, text: body }).then((x) => x.json()).catch(() => ({}));
-        if (r && r.ok) sent++;
-        await new Promise((r2) => setTimeout(r2, 40)); // ponytail: ~25 msg/s, Telegram limiti 30
-      }
-      await tg(token, 'sendMessage', { chat_id: chatId, text: `Rassilka tugadi: ${sent}/${ids.length} ta yuborildi.` });
-    })());
+    (isGroup && String(chatId) === String(LEAD_CHAT()));
+
+  if (canBroadcast && (text.startsWith('/send ') || text.trim().split('@')[0] === '/davom')) {
+    const fresh = text.startsWith('/send ');
+    const body = fresh ? text.slice(6).trim() : await kv(['GET', 'sendtext']);
+    const ids = fresh
+      ? ((await kv(['HKEYS', 'subs'])) || [])
+      : JSON.parse((await kv(['GET', 'sendrest'])) || '[]');
+    if (!body || !ids.length) {
+      await tg(token, 'sendMessage', { chat_id: chatId, text: 'Yuboriladigan narsa yo\'q.' });
+      res.status(200).json({ ok: true });
+      return;
+    }
+    if (fresh) await kv(['SET', 'sendtext', body]);
+    waitUntil(broadcast(token, chatId, body, ids));
     res.status(200).json({ ok: true });
     return;
   }
@@ -317,10 +332,12 @@ export default async function handler(req, res) {
     fd.append('document', new Blob([bytes], { type: 'application/pdf' }), 'reklama-diagnostikasi.pdf');
     await fetch(`https://api.telegram.org/bot${token}/sendDocument`, { method: 'POST', body: fd });
 
-    // 3 daqiqadan keyin VSL post + tugma (javob Telegram'ga darhol qaytadi)
+    // 3 daqiqadan keyin VSL post + tugma. Bazaga ham yozamiz: funksiya uzilib
+    // qolsa, keyingi so'rovda flushDueVsl() yuborib yuboradi.
+    await kv(['ZADD', 'vsl', Date.now() + FOLLOWUP_MS, String(chatId)]);
     waitUntil((async () => {
       await new Promise((r) => setTimeout(r, FOLLOWUP_MS));
-      await tg(token, 'sendMessage', vslMessage(chatId));
+      if (await claimVsl(chatId)) await tg(token, 'sendMessage', vslMessage(chatId));
     })());
   } catch (err) {
     await tg(token, 'sendMessage', {
