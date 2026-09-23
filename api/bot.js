@@ -192,6 +192,11 @@ export default async function handler(req, res) {
       res.status(200).json({ webhook: url, telegram: r });
       return;
     }
+    // Baza tekshiruvi: /api/bot?kv=1
+    if (req.query.kv) {
+      res.status(200).json({ ping: await kv(['PING']), hasLeadChat: !!(await kv(['GET', 'leadchat'])), subs: (await kv(['HLEN', 'subs'])) });
+      return;
+    }
     // Tekshiruv: /api/bot?pdf=2000-150-60-25-80 - PDF'ni brauzerda ko'rish
     if (req.query.pdf) {
       const [b, l, q, c, p] = String(req.query.pdf).split('-').map(Number);
