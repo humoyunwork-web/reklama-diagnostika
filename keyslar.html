@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bepul diagnostika &mdash; Humoyun Olimov</title>
 <meta name="description" content="Meta Ads targeting bo'yicha real keyslar va natijalar. Voronkangizni bepul tahlil qilish uchun ro'yxatdan o'ting.">
+<link rel="canonical" href="https://reklama-diagnostika.vercel.app/keyslar.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://reklama-diagnostika.vercel.app/keyslar.html">
+<meta property="og:title" content="Muammo byudjetda emas. Voronkadagi teshikda.">
+<meta property="og:description" content="40+ loyiha, 5x arzon lid, 4 yil tajriba. Real keyslar va bepul diagnostika.">
+<meta property="og:image" content="https://reklama-diagnostika.vercel.app/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="uz_UZ">
+<meta name="twitter:card" content="summary_large_image">
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
   :root{
     --text:#f5f2ff;
@@ -137,6 +149,7 @@
   .field input::placeholder{color:var(--text-muted);}
   .field input:focus{border-color:var(--coral);}
   .form-card .btn{width:100%;margin-top:8px;}
+  .privacy{font-size:12px;color:var(--text-muted);text-align:center;margin-top:12px;line-height:1.5;}
   #formMsg{
     display:none;text-align:center;padding:15px;border-radius:13px;
     background:var(--glass-bg);font-size:14px;margin-top:16px;color:var(--text-secondary);
@@ -339,6 +352,7 @@
           <input id="telegram" type="text" placeholder="@username" autocapitalize="off" autocorrect="off">
         </div>
         <button type="submit" class="btn" id="submitBtn">Yuborish</button>
+        <p class="privacy">Ma'lumotlaringiz faqat siz bilan bog'lanish uchun ishlatiladi va uchinchi shaxslarga berilmaydi.</p>
       </form>
       <div id="formMsg"></div>
     </div>
@@ -399,6 +413,12 @@
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ name: name, phone: phone, telegram: telegram, diag: diag })
       });
+      if (res.status === 429){
+        msg.className = 'err'; msg.style.display = 'block';
+        msg.textContent = "Siz juda ko'p marta yubordingiz. Bir ozdan keyin urinib ko'ring.";
+        btn.disabled = false; btn.textContent = 'Yuborish';
+        return;
+      }
       if (!res.ok) throw new Error('failed');
       form.style.display = 'none';
       msg.className = 'ok'; msg.style.display = 'block';
