@@ -212,6 +212,21 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Bot guruhga qo'shilganda yoki admin qilinganda - o'sha chatni avtomat eslab qoladi
+  const mcm = req.body && (req.body.my_chat_member || req.body.chat_member);
+  if (mcm && mcm.chat && mcm.chat.type !== 'private') {
+    const st = mcm.new_chat_member && mcm.new_chat_member.status;
+    if (st === 'member' || st === 'administrator') {
+      const ok = await kv(['SET', 'leadchat', String(mcm.chat.id)]);
+      await tg(token, 'sendMessage', {
+        chat_id: mcm.chat.id,
+        text: ok ? 'Tayyor. Lidlar shu yerga tushadi.' : 'Baza ulanmagan - lidlar saqlanmaydi.',
+      });
+    }
+    res.status(200).json({ ok: true });
+    return;
+  }
+
   // kanal postlari boshqa maydonda keladi
   const msg = req.body && (req.body.message || req.body.channel_post);
   const text = msg && msg.text;
